@@ -10,9 +10,11 @@ import {
     TextField,
     Button,
     Divider,
+    Typography,
+    Box,
 } from "@mui/material";
 import axios from "axios";
-
+import { Dropzone } from "@/components/form/Dropzone";
 
 
 interface Form {
@@ -88,6 +90,8 @@ export function MorphingTeamFormDialog({
         }).catch(err => console.error(err));
     }, [form]);
 
+
+ 
     return (
         <>
             {/* Tombol yang bisa “bertransformasi” */}
@@ -148,7 +152,7 @@ export function MorphingTeamFormDialog({
                         <motion.div
                             layoutId="app-launch"
                             style={{
-                                minWidth: 450,
+                                minWidth: 550,
                                 maxWidth: 1000,
                                 height: "max-content",
                                 background: "#fff",
@@ -162,6 +166,7 @@ export function MorphingTeamFormDialog({
                             onClick={(e) => e.stopPropagation()}
                         >
                             <FormControl fullWidth>
+                                <Typography sx={{ mb: 0.5 }}>Name</Typography>
                                 <TextField
                                     placeholder="Name"
                                     size="small"
@@ -173,6 +178,7 @@ export function MorphingTeamFormDialog({
                                 />
                             </FormControl>
                             <FormControl fullWidth>
+                                <Typography sx={{ mb: 0.5 }}>Slug</Typography>
                                 <TextField
                                     placeholder="Slug"
                                     size="small"
@@ -183,41 +189,12 @@ export function MorphingTeamFormDialog({
                                     onChange={e => setForm(pre => ({ ...pre, slug: e.target.value, error_slug: "" }))}
                                 />
                             </FormControl>
+                            <Box>
+                                <Typography sx={{ mb: 0.5 }}>Avatar</Typography>
+                                <Dropzone minHeight={100} />
+                            </Box>
                             <FormControl fullWidth>
-                                <input
-                                    ref={inputRef}
-                                    type="file"
-                                    hidden
-                                    accept="image/*"
-                                    multiple={false}
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) setFileName(file.name);
-                                    }}
-                                />
-                                <TextField
-                                    size="small"
-                                    spellCheck={false}
-                                    value={fileName}
-                                    fullWidth
-                                    placeholder="Pilih file..."
-                                    onClick={() => inputRef.current?.click()}
-                                    slotProps={{
-                                        input: {
-                                            readOnly: true,
-                                            startAdornment: (
-                                                <InputAdornment position="end" sx={{ mr: 1 }}>
-                                                    <AddPhotoAlternateOutlinedIcon fontSize="small" />
-                                                </InputAdornment>
-                                            ),
-                                            sx: {
-                                                padding: 0,
-                                            }
-                                        },
-                                    }}
-                                />
-                            </FormControl>
-                            <FormControl fullWidth>
+                                <Typography sx={{ mb: 0.5 }}>Bio</Typography>
                                 <TextField
                                     placeholder="Description..."
                                     size="small"

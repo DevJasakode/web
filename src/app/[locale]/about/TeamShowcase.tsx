@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -12,6 +14,9 @@ import {
   Mail,
 } from "lucide-react";
 import * as THREE from "three";
+import { useParams } from "next/navigation";
+import { Locale } from "@/i18n/config";
+import { SmartLink } from "@/components/link";
 
 interface Pagination<T = any> {
   count: number;
@@ -533,6 +538,7 @@ const dummyExpertises: Expertise[] = [
 
 // ===== Main Component =====
 export function TeamShowcase() {
+  const { locale } = useParams<{ locale: Locale }>();
   const [q, setQ] = useState("");
   const [org, setOrg] = useState<string>("All");
   const [sort, setSort] = useState<string>("featured");
@@ -727,18 +733,24 @@ export function TeamShowcase() {
       <div className="relative z-10 mt-8 flex flex-col md:flex-row items-center justify-between gap-3">
         <p className="text-sm text-slate-600 dark:text-slate-200/80">Ingin bergabung? Kami selalu mencari talenta terbaik di engineering, desain, dan riset.</p>
         <div className="flex items-center gap-3">
-          <a
-            href="/about/careers"
+          <SmartLink
+            href={{
+              pathname: "/[locale]/about/careers",
+              query: { locale: locale }
+            }}
             className="inline-flex items-center gap-2 rounded-md h-10 bg-indigo-700 px-4 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:bg-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300 dark:focus-visible:ring-2 dark:focus-visible:ring-cyan-200"
           >
             Lihat Lowongan <ExternalLink className="w-4 h-4" />
-          </a>
-          <a
-            href="/about/team"
+          </SmartLink>
+          <SmartLink
+            href={{
+              pathname: "/[locale]/about/team",
+              query: { locale: locale }
+            }}
             className="inline-flex items-center gap-2 rounded-md h-10 bg-green-600 px-4 text-sm font-semibold text-white shadow-lg shadow-green-500/30 transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300 dark:focus-visible:ring-2 dark:focus-visible:ring-cyan-200"
           >
             Show All Team <ExternalLink className="w-4 h-4" />
-          </a>
+          </SmartLink>
         </div>
       </div>
     </section>

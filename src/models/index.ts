@@ -7,6 +7,11 @@ import AuthenticationFactory from "./Authentication";
 import DtpKpuFactory from './DtpKpu';
 import ContactInboxFactory from './ContactInbox';
 import DocsFactory from './Docs';
+import AboutTeamFactory from './AboutTeam';
+import AboutTeamSocialMediaFactory from './AboutTeamSocialMedia';
+
+
+
 
 const env = process.env.NODE_ENV || 'development'
 const config = configAll[env] as Options
@@ -89,6 +94,9 @@ export const models = {
   DtpKpu: DtpKpuFactory(sequelize),
   ContactInbox: ContactInboxFactory(sequelize),
   Docs: DocsFactory(sequelize),
+
+  AboutTeam: AboutTeamFactory(sequelize),
+  AboutTeamSocialMedia: AboutTeamSocialMediaFactory(sequelize),
 };
 
 // jalankan associate SETELAH semua model ada

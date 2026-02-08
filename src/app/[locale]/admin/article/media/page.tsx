@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -42,21 +42,28 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from '@mui/icons-material/Close';
+import { Dropzone, DropzoneRefObject } from "@/components/form/Dropzone";
 
+import { FormFolder } from "./FormFolder";
+import { FormCreateFolder } from "./FormCreateFolder";
 
 interface Form {
   uploadFile: boolean;
+  createFolder: boolean;
+  uploadFolder: boolean;
 };
 
 const initialForm: Form = {
   uploadFile: false,
+  createFolder: false,
+  uploadFolder: false,
 };
 
 
 
 export default function ArticleMedia() {
   const [form, setForm] = useState<Form>(initialForm);
-
+  const dropzoneRef = useRef<DropzoneRefObject>(null);
   const total = 1024;
   const storages = [
     {
@@ -72,9 +79,30 @@ export default function ArticleMedia() {
   ];
 
 
+  const sendFiles = () => {
+    if (dropzoneRef && dropzoneRef.current) {
+      console.log(dropzoneRef.current.getFiles())
+    }
+  };
+
+
 
   return (
     <Box sx={{ p: 3 }}>
+
+      <FormCreateFolder
+        open={form.createFolder}
+        onClose={() => {
+          setForm(pre => ({ ...pre, createFolder: false }))
+        }}
+      />
+      <FormFolder
+        open={form.uploadFolder}
+        onClose={() => {
+          setForm(pre => ({ ...pre, uploadFolder: false }))
+        }}
+      />
+
 
       <Dialog
         open={form.uploadFile}
@@ -84,18 +112,25 @@ export default function ArticleMedia() {
       >
         <DialogTitle>Set backup account</DialogTitle>
         <DialogContent>
-          Hallo
+          <Dropzone
+            ref={dropzoneRef}
+            multiple
+          />
         </DialogContent>
         <DialogActions>
           <Button
             variant="outlined"
             color="error"
-            onClick={() => setForm(pre => ({ ...pre, uploadFile: false }))}
+            onClick={() => {
+              setForm(pre => ({ ...pre, uploadFile: false }))
+              dropzoneRef.current?.clear();
+            }}
             startIcon={<CloseIcon />}
           >Close</Button>
           <Button
             variant="outlined"
             color="primary"
+            onClick={sendFiles}
           >Upload</Button>
         </DialogActions>
       </Dialog>
@@ -126,14 +161,6 @@ export default function ArticleMedia() {
           >
             <Button variant="outlined" startIcon={<FileDownloadOutlinedIcon />}>Import</Button>
             <Button variant="outlined" startIcon={<FileUploadOutlinedIcon />} color="success">Export</Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<DriveFolderUploadOutlinedIcon />}
-            >
-              Create Folder
-            </Button>
-
             <SplitDropdownButton>
               <Button
                 variant="outlined"
@@ -147,7 +174,7 @@ export default function ArticleMedia() {
                 variant="outlined"
                 color="primary"
                 startIcon={<DriveFolderUploadIcon />}
-                onClick={() => alert("Upload Folder")}
+                onClick={() => setForm(pre => ({ ...pre, uploadFolder: true }))}
               >
                 Upload Folder
               </Button>
@@ -155,17 +182,14 @@ export default function ArticleMedia() {
                 variant="outlined"
                 color="primary"
                 startIcon={<CreateNewFolderIcon />}
-                onClick={() => alert("Create Folder")}
+                onClick={() => setForm(pre => ({ ...pre, createFolder: true }))}
               >
                 Create Folder
               </Button>
             </SplitDropdownButton>
-
           </Box>
         </Grid>
       </Grid>
-
-
 
       {/* CARD Storage */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -257,4 +281,4 @@ export default function ArticleMedia() {
 
     </Box>
   );
-}
+};

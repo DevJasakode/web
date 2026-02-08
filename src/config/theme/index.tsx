@@ -112,14 +112,18 @@ export const getDesignTokens = (mode: Mode = 'light'): ThemeOptions => ({
           paddingInline: theme.spacing(2.25),
           transition: 'transform 120ms ease, box-shadow 120ms ease',
           '&:hover': { transform: 'translateY(-1px)' },
+
+          // 🔑 disabled state
+          '&.Mui-disabled': {
+            cursor: 'not-allowed',
+            pointerEvents: 'auto', // penting: supaya cursor tetap muncul
+          },
         }),
         containedPrimary: { color: '#fff' },
       },
       variants: [
-        // Soft primary
         {
           props: { variant: 'soft', color: 'primary' },
-
           style: ({ theme }) => ({
             background: theme.palette.primary.main + '22',
             color: theme.palette.primary.main,
@@ -128,24 +132,17 @@ export const getDesignTokens = (mode: Mode = 'light'): ThemeOptions => ({
               background: theme.palette.primary.main + '33',
               borderColor: theme.palette.primary.main + '66',
             },
-          }),
-        },
-        // Soft secondary
-        {
-          props: { variant: 'soft', color: 'secondary' },
 
-          style: ({ theme }) => ({
-            background: theme.palette.secondary.main + '22',
-            color: theme.palette.secondary.main,
-            border: `1px solid ${theme.palette.secondary.main}33`,
-            '&:hover': {
-              background: theme.palette.secondary.main + '33',
-              borderColor: theme.palette.secondary.main + '66',
+            // optional: kalau mau spesifik variant
+            '&.Mui-disabled': {
+              background: theme.palette.primary.main + '11',
+              color: theme.palette.action.disabled,
             },
           }),
         },
       ],
     },
+
 
     MuiPaper: {
       styleOverrides: {

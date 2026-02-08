@@ -205,6 +205,7 @@ export default function Contact() {
                 >
                   <FormControl fullWidth>
                     <TextField
+                      spellCheck={false}
                       label="Name"
                       size='small'
                       required
@@ -214,6 +215,7 @@ export default function Contact() {
                   </FormControl>
                   <FormControl fullWidth>
                     <TextField
+                      spellCheck={false}
                       label="Company"
                       size='small'
                       value={form.company}
@@ -237,6 +239,7 @@ export default function Contact() {
 
                   <FormControl fullWidth>
                     <TextField
+                      spellCheck={false}
                       label="Phone"
                       size='small'
                       required
@@ -246,6 +249,7 @@ export default function Contact() {
                   </FormControl>
                   <FormControl fullWidth>
                     <TextField
+                      spellCheck={false}
                       label="Message"
                       multiline
                       rows={4}

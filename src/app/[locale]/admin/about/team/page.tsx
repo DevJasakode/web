@@ -13,9 +13,9 @@ import Paper from '@mui/material/Paper';
 
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { MorphingTeamFormDialog } from "./Form";
-
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 
 interface Store {
 
@@ -60,6 +60,8 @@ const columns: GridColDef[] = [
         field: 'age',
         headerName: 'Age',
         type: 'number',
+        align: "left",
+        headerAlign: "left",
         disableColumnMenu: true,
     },
     {
@@ -82,12 +84,20 @@ const columns: GridColDef[] = [
             return (
                 <Box>
                     <IconButton
-                        color="primary"
+                        color="secondary"
                         onClick={e => {
                             e.stopPropagation();
                         }}
                     >
-                        <FileDownloadOutlinedIcon />
+                        <MoreVertOutlinedIcon />
+                    </IconButton>
+                    <IconButton
+                        color="error"
+                        onClick={e => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        <DeleteOutlinedIcon />
                     </IconButton>
                 </Box>
             )
@@ -118,7 +128,7 @@ export default function Team() {
 
             <Grid container spacing={2} sx={{ mb: 3 }}>
                 <Grid size={{ xs: 12, sm: 6, md: 6 }}>
-                    
+
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 6 }}>
                     <Box
@@ -158,7 +168,19 @@ export default function Team() {
                         initialState={{ pagination: { paginationModel } }}
                         pageSizeOptions={[10, 25, 50, 75, 100]}
                         checkboxSelection
-                        sx={{ border: 0 }}
+                        // // sx={{ border: 0 }}
+                        // showCellVerticalBorder={true}
+                        // showColumnVerticalBorder={true}
+                        sx={{
+                            '& .MuiDataGrid-cell': {
+                                borderRight: '1px solid rgba(224, 224, 224, 1)',
+                                borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                            },
+                            '& .MuiDataGrid-columnHeaders': {
+                                borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                            },
+                        }}
+
                     />
                 </Paper>
             </Box>
@@ -169,8 +191,6 @@ export default function Team() {
 /**
  * avatar
  * name
- * job
- * job_desc
  * tags
  * social media
  * profile username

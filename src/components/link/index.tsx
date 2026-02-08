@@ -12,6 +12,7 @@ type HrefObject = {
 type SmartLinkProps = Omit<LinkProps, "href"> & {
     href: HrefObject;
     style?: CSSProperties | undefined;
+    className?: string | undefined;
     children: ReactNode;
 };
 
@@ -32,5 +33,5 @@ function interpolate(
 
 export function SmartLink({ href, ...props }: SmartLinkProps) {
     const resolvedPath = interpolate(href.pathname, href.query);
-    return <Link href={resolvedPath} {...props}/>;
+    return <Link {...props} href={resolvedPath} />;
 }
