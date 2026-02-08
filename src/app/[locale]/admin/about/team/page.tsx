@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import {
     Box,
     Grid,
@@ -16,17 +16,33 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { MorphingTeamFormDialog } from "./Form";
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import { AboutTeam, ResponsePagination } from "@/api/about/team/models";
+import axios, { AxiosError } from "axios";
+import { SmartLink } from "@/components/link";
+import { Locale } from "@/i18n/config";
+import { useParams } from "next/navigation";
 
 interface Store {
-
+    loading: boolean;
 }
 
 const initialStore: Store = {
+    loading: false,
+};
 
-}
+interface Filter {
+    limit: number;
+    page: number;
+};
+
+const initialFilter: Filter = {
+    limit: 25,
+    page: 0,
+};
 
 
-const columns: GridColDef[] = [
+
+const columns: GridColDef<AboutTeam>[] = [
     { field: 'id', headerName: 'ID', width: 70, disableColumnMenu: true },
     {
         field: 'avatar',
@@ -48,28 +64,66 @@ const columns: GridColDef[] = [
                     }}
                     onClick={e => e.stopPropagation()}
                 >
-                    <Avatar>N</Avatar>
+                    {
+                        params.row.avatar ?
+                            <Avatar src={params.row.avatar} alt={params.row.name}></Avatar> :
+                            <Avatar>{params.row.name}</Avatar>
+                    }
+
                 </Box>
             )
         },
     },
-    { field: 'firstName', headerName: 'First name', width: 160 },
-    { field: 'lastName', headerName: 'Last name', width: 160 },
     {
-        width: 120,
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
+        flex: 1,
+        field: 'name',
+        headerName: 'Name',
+        description: 'This column has a value getter and is not sortable.',
+        renderCell(params) {
+            const { locale } = useParams<{ locale: Locale }>(); 
+            return (
+                <Fragment>
+                    {
+                        params.row.profile ?
+                        <SmartLink
+                            href={{
+                                pathname: `/[locale]/about/profile/@${params.row.profile}`,
+                                query: { locale }
+                            }}
+                        >
+                            { params.row.name }
+                        </SmartLink> :
+                        params.row.name
+                    }
+                </Fragment>
+            )
+        },
+    },
+    {
+        flex: 1,
+        field: 'focus',
+        headerName: 'Focus',
         align: "left",
         headerAlign: "left",
+        sortable: false,
         disableColumnMenu: true,
     },
     {
         flex: 1,
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+        field: "position",
+        headerName: 'Position',
+        align: "left",
+        headerAlign: "left",
+        sortable: false,
+        disableColumnMenu: true,
+    },
+    {
+        flex: 1,
+        field: 'created_at',
+        headerName: 'Created At',
+        align: "left",
+        headerAlign: "left",
+        disableColumnMenu: true,
     },
     {
         field: "action",
@@ -117,11 +171,37 @@ const rows = [
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-const paginationModel = { page: 0, pageSize: 10 };
-
 
 export default function Team() {
+    const [filter, setFilter] = useState<Filter>(initialFilter);
+    const [team, setTeam] = useState<ResponsePagination<AboutTeam>>({ meta: { total: 0, limit: 25, offset: 0 }, data: [] });
     const [store, setStore] = useState<Store>(initialStore);
+
+
+    const loadTeam = useCallback(async () => {
+        try {
+            setStore(pre => ({ ...pre, loading: true }));
+            const res = await axios.get<ResponsePagination<AboutTeam>>(
+                `/api/about/team?limit=${filter.limit}&offset=${filter.limit * filter.page}`,
+                {
+                    withCredentials: true,
+                    timeout: 500,
+                }
+            );
+            if (res.status >= 200 && res.status <= 201) {
+                setTeam(res.data);
+                console.log(res.data);
+            }
+        } catch (error) {
+            const err: AxiosError = error as AxiosError;
+            console.log(err.response?.statusText || err.message)
+        } finally {
+            setStore(pre => ({ ...pre, loading: false }));
+        }
+    }, [filter, setTeam, setStore]);
+
+
+    useEffect(() => { loadTeam(); }, [filter]);
 
     return (
         <Box>
@@ -163,14 +243,11 @@ export default function Team() {
             <Box>
                 <Paper sx={{ width: '100%' }}>
                     <DataGrid
-                        rows={rows}
+                        rows={team.data || []}
                         columns={columns}
-                        initialState={{ pagination: { paginationModel } }}
+                        initialState={{ pagination: { paginationModel: { page: filter.page, pageSize: filter.limit } } }}
                         pageSizeOptions={[10, 25, 50, 75, 100]}
                         checkboxSelection
-                        // // sx={{ border: 0 }}
-                        // showCellVerticalBorder={true}
-                        // showColumnVerticalBorder={true}
                         sx={{
                             '& .MuiDataGrid-cell': {
                                 borderRight: '1px solid rgba(224, 224, 224, 1)',
@@ -187,11 +264,3 @@ export default function Team() {
         </Box>
     )
 };
-
-/**
- * avatar
- * name
- * tags
- * social media
- * profile username
- */

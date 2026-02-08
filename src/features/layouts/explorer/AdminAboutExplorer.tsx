@@ -34,7 +34,7 @@ const menuData: AdminExplorerMenuItem[] = [
         id: "history",
         label: "History",
         icon: <ManageHistoryOutlinedIcon fontSize="small" />,
-        path: "/[locale]admin/about/history",
+        path: "/[locale]/admin/about/history",
     },
     {
         id: "settings",

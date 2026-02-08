@@ -26,6 +26,8 @@ import { useEffect } from "react";
 import { ButtonThemeToggle, ButtonLanguageSelector, ButtonBackToTop } from "@/components/button";
 import { locales, Locale } from "@/i18n/config";
 import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
+import { SmartLink } from "@/components/link";
 
 const ACTIVITY_WIDTH = 48;
 const SIDEBAR_MIN = 180;
@@ -67,6 +69,7 @@ export function AdminLayout({
 }: {
     children: ReactNode;
 }) {
+    const { locale } = useParams<{ locale: Locale }>();
     const pathname = usePathname();
     const { setMode, mode } = useTheme();
     const [store, setStore] = useState<Store>(initialStore);
@@ -123,7 +126,7 @@ export function AdminLayout({
         const route = normalizeLocaleRoute(pathname);
         if (route.startsWith("/[locale]")) {
             for (let index = 0; index < activitys.length; index++) {
-                if(route.startsWith(activitys[index].prefix || "")) {
+                if (route.startsWith(activitys[index].prefix || "")) {
                     setStore(pre => ({ ...pre, activity: activitys[index].code }));
                 }
             }
@@ -152,12 +155,15 @@ export function AdminLayout({
                             }}
                         >
                             <div>
-                                <Link href={"/admin"} className="flex items-center gap-1">
+                                <SmartLink
+                                    href={{ pathname: "/[locale]/admin", query: { locale: locale } }}
+                                    className="flex items-center gap-1"
+                                >
                                     <div className="felx items-center justify-center overflow-hidden">
                                         <img src={"/assets/Logo.png"} alt="Logo" width={28} />
                                     </div>
                                     <Typography variant="body2" fontWeight={"bold"} fontSize={"1.2rem"}>Jasakode Admin</Typography>
-                                </Link>
+                                </SmartLink>
                             </div>
                             <div className="flex items-center justify-end gap-1">
                                 <ButtonLanguageSelector />
