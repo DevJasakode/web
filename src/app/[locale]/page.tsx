@@ -814,21 +814,36 @@ function ContactSection() {
                         viewport={{ once: true }}
                         className="space-y-4 min-w-0"
                     >
-                        <input
-                            type="text"
-                            placeholder="Nama lengkap"
-                            className="w-full rounded-md border border-slate-200/70 dark:border-slate-700/70 bg-white/80 dark:bg-slate-900/60 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none"
-                        />
-                        <input
-                            type="email"
-                            placeholder="Email kerja"
-                            className="w-full rounded-md border border-slate-200/70 dark:border-slate-700/70 bg-white/80 dark:bg-slate-900/60 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none"
-                        />
+                        <FormControl fullWidth>
+                            <TextField size="small"
+                                placeholder="Nama lengkap"
+                                slotProps={{
+                                    input: {
+                                        type: "text"
+                                    }
+                                }}
+                            />
+                        </FormControl>
+                        <FormControl fullWidth>
+                            <TextField size="small"
+                                placeholder="Email kerja"
+                                slotProps={{
+                                    input: {
+                                        type: "email"
+                                    }
+                                }}
+                            />
+                        </FormControl>
                         <div className="flex gap-2">
                             <FormPhoneCode />
                             <FormControl fullWidth>
                                 <TextField size="small"
                                     placeholder="0"
+                                    slotProps={{
+                                        input: {
+                                            type: "number"
+                                        }
+                                    }}
                                 />
                             </FormControl>
                         </div>

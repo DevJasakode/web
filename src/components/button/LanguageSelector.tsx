@@ -71,7 +71,6 @@ export function ButtonLanguageSelector() {
                 <Typography
                     fontWeight="bold"
                     fontSize={"0.8rem"}
-                    sx={{ display: { xs: 'none', md: 'block' } }}
                 >
                     {language.code.toUpperCase()}
                 </Typography>

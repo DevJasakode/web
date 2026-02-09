@@ -192,6 +192,7 @@ export function FormPhoneCode(props: FormPhoneCodeProps & SelectProps<string>) {
                             },
                         },
                     }}
+                    value='+62'
                 >
                     {PHONE_CODES.map((item) => (
                         <MenuItem key={Math.random()} value={item.code}>

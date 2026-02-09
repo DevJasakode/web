@@ -2,8 +2,26 @@
 
 import { motion } from "framer-motion";
 import { Hammer, Construction, AlertTriangle } from "lucide-react";
+import { CareerList } from "./CareerList";
+import { Box } from "@mui/material";
 
 export default function Careers() {
+
+  return (
+    <Box 
+      maxWidth={"lg"}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        margin: "0 auto",
+        p: 3,
+        minHeight: "100svh"
+      }}
+    >
+      <CareerList />
+    </Box>
+  )
+
   return (
     <div className="min-h-screen flex flex-col items-center pt-12 md:pt-24 bg-gradient-to-br from-slate-50 to-slate-200 text-slate-800 dark:text-slate-100 dark:from-slate-950 dark:to-slate-800">
       <motion.div
