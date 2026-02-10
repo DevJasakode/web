@@ -1,258 +1,192 @@
 "use client";
 
-import * as React from "react";
 import {
-    Box,
-    Container,
-    Typography,
-    TextField,
-    Chip,
-    Card,
-    CardContent,
-    Button,
-    Stack,
-    Divider,
-    alpha,
-    Grid,
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Stack,
+  Chip,
+  Button
 } from "@mui/material";
-
-/* =======================
-   Types
-======================= */
-type SolutionTag = "advisory" | "build" | "assurance" | "operate";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 type Solution = {
-    id: string;
-    name: string;
-    description: string;
-    tags: SolutionTag[];
-    duration: string;
-    deliverable: string;
-    fit: string;
+  id: string;
+  title: string;
+  problem: string;
+  solution: string;
+  domains: string[];
 };
 
-/* =======================
-   Dummy Data
-======================= */
-const SOLUTIONS: Solution[] = [
-    {
-        id: "consulting",
-        name: "Consulting",
-        description:
-            "Strategic framing, system thinking, and architectural decisions.",
-        tags: ["advisory"],
-        duration: "2–6 weeks",
-        deliverable: "Strategy brief",
-        fit: "Founders, executives",
-    },
-    {
-        id: "research",
-        name: "Technology Research",
-        description:
-            "Focused experimentation to validate ideas before committing.",
-        tags: ["advisory", "build"],
-        duration: "2–8 weeks",
-        deliverable: "PoC & report",
-        fit: "R&D teams",
-    },
-    {
-        id: "design",
-        name: "Software Design",
-        description:
-            "UX flows, system architecture, and technical specifications.",
-        tags: ["advisory", "build"],
-        duration: "3–6 weeks",
-        deliverable: "Design spec",
-        fit: "Product & engineering",
-    },
-    {
-        id: "development",
-        name: "Development",
-        description:
-            "End-to-end implementation with CI/CD and production readiness.",
-        tags: ["build", "operate"],
-        duration: "6–12 weeks",
-        deliverable: "Production system",
-        fit: "Product teams",
-    },
-    {
-        id: "review",
-        name: "Code & Security Review",
-        description:
-            "Audit quality, performance, and security posture.",
-        tags: ["assurance"],
-        duration: "1–3 weeks",
-        deliverable: "Audit report",
-        fit: "Engineering orgs",
-    },
+const solutionsData: Solution[] = [
+  {
+    id: "s1",
+    title: "Scalable Backend Infrastructure",
+    problem:
+      "Aplikasi tumbuh cepat, tetapi backend tidak siap menangani lonjakan trafik dan kompleksitas.",
+    solution:
+      "Arsitektur backend modular dengan pendekatan domain-driven design, event-driven communication, dan skalabilitas horizontal.",
+    domains: ["Backend", "Scalability", "Architecture"]
+  },
+  {
+    id: "s2",
+    title: "Real-time Data Synchronization",
+    problem:
+      "Data terdistribusi di banyak layanan dan sering tidak sinkron.",
+    solution:
+      "Mekanisme sinkronisasi real-time menggunakan WebSocket, message broker, dan konsistensi eventual yang terkontrol.",
+    domains: ["Realtime", "Distributed System"]
+  },
+  {
+    id: "s3",
+    title: "Secure Digital Platform",
+    problem:
+      "Risiko keamanan meningkat seiring bertambahnya pengguna dan integrasi.",
+    solution:
+      "Pendekatan security-by-design dengan isolasi layanan, audit log, dan kontrol akses berlapis.",
+    domains: ["Security", "Platform"]
+  },
+  {
+    id: "s4",
+    title: "Developer Productivity System",
+    problem:
+      "Tim developer melambat karena tooling tidak konsisten dan workflow berantakan.",
+    solution:
+      "Standarisasi tooling, otomatisasi pipeline, dan sistem dokumentasi yang hidup bersama kode.",
+    domains: ["Developer Experience", "Automation"]
+  }
 ];
 
-/* =======================
-   Component
-======================= */
 export default function Solutions() {
-    const [query, setQuery] = React.useState("");
-    const [activeTags, setActiveTags] = React.useState<SolutionTag[]>([
-        "advisory",
-        "build",
-        "assurance",
-        "operate",
-    ]);
+  return (
+    <Box sx={{ py: { xs: 8, md: 12 } }}>
+      <Container maxWidth="lg">
+        {/* Hero */}
+        <Box textAlign="center" mb={10}>
+          <Typography
+            variant="overline"
+            color="primary"
+            sx={{ letterSpacing: 2 }}
+          >
+            Solutions
+          </Typography>
 
-    const filtered = React.useMemo(() => {
-        return SOLUTIONS.filter(
-            (s) =>
-                (s.name.toLowerCase().includes(query.toLowerCase()) ||
-                    s.description.toLowerCase().includes(query.toLowerCase())) &&
-                s.tags.some((t) => activeTags.includes(t))
-        );
-    }, [query, activeTags]);
+          <Typography
+            variant="h2"
+            sx={{ fontWeight: 700, mt: 2 }}
+          >
+            Systems That
+            <Box component="span" color="primary.main">
+              {" "}
+              Solve Real Problems
+            </Box>
+          </Typography>
 
-    return (
-        <Box
+          <Typography
+            color="text.secondary"
             sx={{
-                // bgcolor: "background.default",
-                minHeight: "100vh"
+              maxWidth: 760,
+              mx: "auto",
+              mt: 3,
+              fontSize: "1.05rem"
             }}
-        >
-            {/* ================= Hero ================= */}
-            <Box
-                sx={(theme) => ({
-                    py: 12,
-                    // background: `linear-gradient(180deg, ${alpha(
-                    //     theme.palette.primary.main,
-                    //     0.08
-                    // )}, transparent)`,
-                })}
-            >
-                <Container maxWidth="lg">
-                    <Typography variant="h3" fontWeight={700}>
-                        Solutions
-                    </Typography>
+          >
+            Setiap solusi dirancang sebagai sistem yang dapat bertahan,
+            berkembang, dan beradaptasi — bukan sekadar fitur jangka pendek.
+          </Typography>
+        </Box>
+
+        {/* Solutions List */}
+        <Grid container spacing={4}>
+          {solutionsData.map(solution => (
+            <Grid size={{ xs: 12, md: 6 }} key={solution.id}>
+              <Card
+                elevation={0}
+                sx={{
+                  height: "100%",
+                  borderRadius: 4,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  backgroundColor: "background.paper",
+                  transition: "all .25s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: theme =>
+                      `0 12px 32px ${theme.palette.action.hover}`
+                  }
+                }}
+              >
+                <CardContent sx={{ p: 4 }}>
+                  <Stack spacing={3}>
                     <Typography
-                        color="text.secondary"
-                        maxWidth={640}
-                        mt={2}
-                        fontSize={18}
+                      variant="h5"
+                      sx={{ fontWeight: 600 }}
                     >
-                        Modular services covering strategy, build, assurance, and operations.
+                      {solution.title}
                     </Typography>
+
+                    <Box>
+                      <Typography
+                        variant="subtitle2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Problem
+                      </Typography>
+                      <Typography>
+                        {solution.problem}
+                      </Typography>
+                    </Box>
+
+                    <Box>
+                      <Typography
+                        variant="subtitle2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Approach
+                      </Typography>
+                      <Typography>
+                        {solution.solution}
+                      </Typography>
+                    </Box>
 
                     <Stack
-                        direction={{ xs: "column", sm: "row" }}
-                        spacing={2}
-                        mt={4}
+                      direction="row"
+                      spacing={1}
+                      flexWrap="wrap"
                     >
-                        <TextField
-                            placeholder="Search solutions…"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            sx={{ width: 320 }}
+                      {solution.domains.map(domain => (
+                        <Chip
+                          key={domain}
+                          label={domain}
+                          size="small"
+                          variant="outlined"
                         />
-
-                        {(["advisory", "build", "assurance", "operate"] as SolutionTag[]).map(
-                            (tag) => (
-                                <Chip
-                                    key={tag}
-                                    label={tag}
-                                    onClick={() =>
-                                        setActiveTags((prev) =>
-                                            prev.includes(tag)
-                                                ? prev.filter((t) => t !== tag)
-                                                : [...prev, tag]
-                                        )
-                                    }
-                                    color={activeTags.includes(tag) ? "primary" : "default"}
-                                />
-                            )
-                        )}
+                      ))}
                     </Stack>
-                </Container>
-            </Box>
 
-            {/* ================= Grid ================= */}
-            <Container maxWidth="lg" sx={{ py: 10 }}>
-                <Grid container spacing={3}>
-                    {filtered.map((s) => (
-                        <Grid key={s.id} sx={{ xs: 12, sm: 6, md: 4 }}>
-                            <Card
-                                sx={(theme) => ({
-                                    height: "100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    borderRadius: 3,
-                                    transition: "all .25s ease",
-                                    "&:hover": {
-                                        transform: "translateY(-6px)",
-                                        boxShadow: theme.shadows[6],
-                                    },
-                                })}
-                            >
-                                <CardContent sx={{ flexGrow: 1 }}>
-                                    <Typography fontWeight={600} fontSize={18}>
-                                        {s.name}
-                                    </Typography>
-
-                                    <Typography
-                                        fontSize={14}
-                                        color="text.secondary"
-                                        mt={1}
-                                    >
-                                        {s.description}
-                                    </Typography>
-
-                                    <Divider sx={{ my: 2 }} />
-
-                                    <Typography fontSize={13}>
-                                        <b>Duration:</b> {s.duration}
-                                    </Typography>
-                                    <Typography fontSize={13}>
-                                        <b>Deliverable:</b> {s.deliverable}
-                                    </Typography>
-                                    <Typography fontSize={13}>
-                                        <b>Best for:</b> {s.fit}
-                                    </Typography>
-
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        sx={{ mt: 3 }}
-                                    >
-                                        View details
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Container>
-
-            {/* ================= Comparison ================= */}
-            <Box sx={{ bgcolor: "background.paper", py: 8 }}>
-                <Container maxWidth="lg">
-                    <Typography variant="h5" fontWeight={600}>
-                        Comparison Overview
-                    </Typography>
-
-                    <Stack spacing={2} mt={3}>
-                        {SOLUTIONS.map((s) => (
-                            <Box
-                                key={s.id}
-                                sx={(theme) => ({
-                                    p: 3,
-                                    borderRadius: 2,
-                                    border: `1px solid ${theme.palette.divider}`,
-                                })}
-                            >
-                                <Typography fontWeight={600}>{s.name}</Typography>
-                                <Typography fontSize={14} color="text.secondary">
-                                    {s.duration} • {s.deliverable} • {s.fit}
-                                </Typography>
-                            </Box>
-                        ))}
-                    </Stack>
-                </Container>
-            </Box>
-        </Box>
-    );
+                    <Box>
+                      <Button
+                        endIcon={<ArrowForwardIcon />}
+                        sx={{
+                          textTransform: "none",
+                          px: 0
+                        }}
+                      >
+                        View details
+                      </Button>
+                    </Box>
+                  </Stack>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </Box>
+  );
 }

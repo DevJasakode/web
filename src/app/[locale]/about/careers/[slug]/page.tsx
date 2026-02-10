@@ -7,9 +7,12 @@ import {
     Chip,
     Stack,
     Divider,
+    Button,
 } from "@mui/material";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { SmartLink } from "@/components/link";
+import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 
 /**
  * Dummy data karier
@@ -74,6 +77,7 @@ export default function CareersDetail() {
                     margin: "0 auto",
                     p: 4,
                     textAlign: "center",
+                    minHeight: "100svh"
                 }}
             >
                 <WorkOutlineIcon sx={{ fontSize: 64, color: "text.disabled", mb: 2 }} />
@@ -95,10 +99,11 @@ export default function CareersDetail() {
                 flexDirection: "column",
                 margin: "0 auto",
                 p: 3,
-                minHeight: "100svh",
+                minHeight: "700px",
             }}
         >
             {/* Header */}
+
             <Stack spacing={1} mb={3}>
                 <Typography variant="h4" fontWeight={700}>
                     {career.title}
@@ -106,14 +111,43 @@ export default function CareersDetail() {
                 <Typography color="text.secondary">
                     {career.department}
                 </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        flexWrap: "wrap",
+                        gap: 3,
+                    }}
+                >
+                    <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                        <LocationOnOutlinedIcon fontSize="small" />
+                        <Typography variant="body2">{career.location}</Typography>
+                        <Chip label={career.employmentType} size="small" />
+                        <Chip label={career.workMode} size="small" variant="outlined" />
+                    </Stack>
+                    <Box>
+                        <SmartLink
+                            href={{
+                                pathname: "/[locale]/about/careers/[slug]/applicant",
+                                query: { slug: params.slug }
+                            }}
+                        >
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                startIcon={<WorkOutlineOutlinedIcon />}
+                            >
+                                Lamar
+                            </Button>
+                        </SmartLink>
+                    </Box>
+                </Box>
 
-                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                    <LocationOnOutlinedIcon fontSize="small" />
-                    <Typography variant="body2">{career.location}</Typography>
-                    <Chip label={career.employmentType} size="small" />
-                    <Chip label={career.workMode} size="small" variant="outlined" />
-                </Stack>
             </Stack>
+
+
+
 
             <Divider sx={{ mb: 3 }} />
 
@@ -156,4 +190,4 @@ export default function CareersDetail() {
             </Box>
         </Box>
     );
-}
+};

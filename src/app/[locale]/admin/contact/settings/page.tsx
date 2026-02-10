@@ -98,7 +98,43 @@ export default function ContactSettings() {
         <Card>
           <CardContent>
             <Typography fontWeight={600} mb={2}>
-              Inbox
+              Inbox Email
+            </Typography>
+
+            <Stack spacing={2}>
+              <TextField
+                label="Inbox Email"
+                fullWidth
+                helperText="All contact messages will be sent to this email"
+                value={settings.inboxEmail}
+                onChange={(e) =>
+                  handleChange("inboxEmail", e.target.value)
+                }
+              />
+
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={settings.notifyOnNewMessage}
+                    onChange={(e) =>
+                      handleChange(
+                        "notifyOnNewMessage",
+                        e.target.checked
+                      )
+                    }
+                  />
+                }
+                label="Notify me when a new message arrives"
+              />
+            </Stack>
+          </CardContent>
+        </Card>
+
+        {/* ===== Inbox Phone ===== */}
+        <Card>
+          <CardContent>
+            <Typography fontWeight={600} mb={2}>
+              Inbox Phone
             </Typography>
 
             <Stack spacing={2}>
