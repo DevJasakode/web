@@ -45,11 +45,11 @@ export function Footer() {
                         </svg>
                         <span className="ms-2">+6285159003374</span>
                     </a>
-                    <a target="_blank" href="mailto:support@jasakode.com" className="relative text-[1rem] md:text-[1.2rem] cursor-pointer hover:text-blue-600 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100 w-max flex items-center">
+                    <a target="_blank" href="mailto:info@jasakode.com" className="relative text-[1rem] md:text-[1.2rem] cursor-pointer hover:text-blue-600 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100 w-max flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20zm8-7L4 8v10h16V8zm0-2l8-5H4zM4 8V6v12z" />
                         </svg>
-                        <span className="ms-2">support@jasakode.com</span>
+                        <span className="ms-2">info@jasakode.com</span>
                     </a>
                     <section className="mt-2">
                         <div className="mb-1">{t("footer.follow_us")}</div>

@@ -36,6 +36,7 @@ module.exports = {
       name: "employment_type_check",
       where: {
         employment_type: [
+          "mitra",
           "full-time",
           "part-time",
           "contract",

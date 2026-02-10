@@ -3,6 +3,8 @@
 
 import Link, { LinkProps } from "next/link";
 import { ReactNode, CSSProperties } from "react";
+import { useParams } from "next/navigation";
+import { Locale } from "@/i18n/config";
 
 type HrefObject = {
     pathname: string;
@@ -32,6 +34,8 @@ function interpolate(
 }
 
 export function SmartLink({ href, ...props }: SmartLinkProps) {
-    const resolvedPath = interpolate(href.pathname, href.query);
+    const { locale } = useParams<{ locale: Locale }>();
+
+    const resolvedPath = interpolate(href.pathname, { locale: locale, ...href.query });
     return <Link {...props} href={resolvedPath} />;
 }

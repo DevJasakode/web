@@ -12,12 +12,14 @@ import {
 } from '@mui/material';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import { SmartLink } from '@/components/link';
 
 /**
  * Tipe data lowongan
  */
 type Job = {
     id: number;
+    slug: string;
     title: string;
     department: string;
     location: string;
@@ -32,6 +34,7 @@ type Job = {
 const dummyJobs: Job[] = [
     {
         id: 1,
+        slug: "frontend-engineer",
         title: 'Frontend Engineer',
         department: 'Engineering',
         location: 'Remote',
@@ -41,6 +44,7 @@ const dummyJobs: Job[] = [
     },
     {
         id: 2,
+        slug: "ui-ux-designer",
         title: 'UI/UX Designer',
         department: 'Product',
         location: 'Jakarta',
@@ -50,6 +54,7 @@ const dummyJobs: Job[] = [
     },
     {
         id: 3,
+        slug: "backend-engineer",
         title: 'Backend Engineer',
         department: 'Engineering',
         location: 'Bandung',
@@ -134,9 +139,13 @@ export function CareerList() {
                                     </Typography>
 
                                     <Box>
-                                        <Button variant="contained">
-                                            Lihat Detail
-                                        </Button>
+                                        <SmartLink href={{
+                                            pathname: `/[locale]/about/careers/${job.slug}`
+                                        }}>
+                                            <Button variant="contained">
+                                                Lihat Detail
+                                            </Button>
+                                        </SmartLink>
                                     </Box>
                                 </Stack>
                             </CardContent>
