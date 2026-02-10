@@ -12,6 +12,7 @@ import {
   Button
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { CommitmentFeeExplanation } from "./CommitmentFeeExplanation";
 
 type Solution = {
   id: string;
@@ -187,6 +188,9 @@ export default function Solutions() {
           ))}
         </Grid>
       </Container>
+      <Container maxWidth="lg" sx={{ mt: 3 }}>
+        <CommitmentFeeExplanation />
+      </Container>
     </Box>
   );
-}
+};

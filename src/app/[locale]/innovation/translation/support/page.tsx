@@ -16,9 +16,13 @@ import {
     Alert,
     Grid,
     Select,
-    MenuItem
+    MenuItem,
+    Avatar,
+    Divider,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { DonationOverview } from "./DonationOverview";
+
 
 type DonationFormData = {
     name: string;
@@ -35,6 +39,38 @@ const initialState: DonationFormData = {
     paymentMethod: "",
     note: "",
 };
+
+
+interface Donation {
+    name: string;
+    amount: number;
+}
+
+const dummyDonations: Donation[] = [
+    {
+        name: "Andi Pratama",
+        amount: 500_000,
+    },
+    {
+        name: "Siti Rahma",
+        amount: 300_000,
+    },
+    {
+        name: "Budi Santoso",
+        amount: 250_000,
+    },
+    {
+        name: "Anonymous",
+        amount: 100_000,
+    },
+];
+
+const formatCurrency = (value: number): string =>
+    new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+    }).format(value);
 
 export default function DonationForm() {
     const [form, setForm] = React.useState<DonationFormData>(initialState);
@@ -163,12 +199,6 @@ export default function DonationForm() {
                             </Stack>
                         </Grid>
                     </Grid>
-
-
-
-
-
-
                     {/* Submit */}
                     <Box display="flex" justifyContent="flex-end">
                         <Button
@@ -187,6 +217,8 @@ export default function DonationForm() {
                     </Typography>
                 </Stack>
             </Paper>
+
+            <DonationOverview />
         </Box>
     );
-}
+};
