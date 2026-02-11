@@ -42,8 +42,81 @@ const projects: Project[] = [
         logo: "/assets/image/Logo.png",
         desc: "Sistem identitas digital terdesentralisasi yang menghilangkan single point of failure dan memberikan kontrol penuh kepada pengguna.",
         tags: ["Blockchain", "Security", "Web3"],
-    }
+    },
+    {
+        path: "/[locale]/innovation/translation",
+        name: "Jasakode Facial Recognition",
+        logo: "/assets/image/Logo.png",
+        desc: "Sistem identitas digital terdesentralisasi yang menghilangkan single point of failure dan memberikan kontrol penuh kepada pengguna.",
+        tags: ["Blockchain", "Security", "Web3"],
+    },
+    {
+        path: "/[locale]/innovation/translation",
+        name: "Mass Surveillance System",
+        logo: "/assets/image/Logo.png",
+        desc: "Sistem pengawasan skala besar yang mengumpulkan, memproses, dan menganalisis data populasi secara luas dan berkelanjutan.",
+        tags: ["Blockchain", "Security", "Web3"],
+    },
+    {
+        path: "/[locale]/innovation/translation",
+        name: "HUMINT — Human Intelligence",
+        logo: "/assets/image/Logo.png",
+        desc: "Pengumpulan informasi melalui interaksi langsung dengan manusia..",
+        tags: ["Blockchain", "Security", "Web3"],
+    },
+    {
+        path: "/[locale]/innovation/translation",
+        name: "SIGINT — Signals Intelligence",
+        logo: "/assets/image/Logo.png",
+        desc: "Mengumpulkan Komunikasi, Sinyal elektronik, Metadata, Jaringan komunikasi, Infrastruktur negara, Organisasi militer / politik",
+        tags: ["Blockchain", "Security", "Web3"],
+    },
+    {
+        path: "/[locale]/innovation/translation",
+        name: "OSINT — Open Source Intelligence",
+        logo: "/assets/image/Logo.png",
+        desc: "Intelijen dari sumber terbuka",
+        tags: ["Blockchain", "Security", "Web3"],
+    },
+    {
+        path: "/[locale]/innovation/translation",
+        name: "GEOINT — Geospatial Intelligence",
+        logo: "/assets/image/Logo.png",
+        desc: "Intelijen dari sumber terbuka",
+        tags: ["Blockchain", "Security", "Web3"],
+    },
+    {
+        path: "/[locale]/innovation/translation",
+        name: "IMINT — Imagery Intelligence",
+        logo: "/assets/image/Logo.png",
+        desc: "Intelijen dari sumber terbuka",
+        tags: ["Blockchain", "Security", "Web3"],
+    },
 ];
+
+// 1. Information Services
+// 2. Data Collection & Analysis Services
+// 3. Market Research & Insights
+// 4. Social Media Analytics / Social Listening
+// 5. Business Intelligence (BI)
+// 6. Customer Insights / Consumer Insights
+// 7. Data-Driven Marketing Services
+
+
+// Investigative Research / Investigative Work
+// Investigative Journalism
+// Whistleblowing
+// Espionage
+// Covert Investigation
+
+// Psychological Operations (PSYOPS)
+// Influence Operations
+// Narrative Control / Narrative Engineering
+// Psychological Manipulation
+// Persuasion Science
+// Psychological Profiling
+// Behavioral Analysis
+// Psychographic Analysis
 
 export default function InnovationHub() {
     return (
@@ -186,11 +259,11 @@ export default function InnovationHub() {
                                         </Typography>
 
                                         {/* FOOTER */}
-                                        <Box 
-                                            sx={{ 
+                                        <Box
+                                            sx={{
                                                 mt: "auto",
                                                 display: "flex",
-                                                gap: 3, 
+                                                gap: 3,
                                                 alignItems: "center",
                                                 justifyContent: "flex-end",
                                             }}

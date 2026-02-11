@@ -1,4 +1,5 @@
 "use client";
+import { SmartLink } from "@/components/link";
 import { useI18n } from "@/i18n";
 
 export function Footer() {
@@ -23,6 +24,12 @@ export function Footer() {
                     <a href="#" className="relative text-[0.9rem] md:text-[1.2rem] cursor-pointer hover:text-blue-600 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100 w-max">{t("nav.solutions")}</a>
                     <a href="#" className="relative text-[0.9rem] md:text-[1.2rem] cursor-pointer hover:text-blue-600 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100 w-max">Community</a>
                     <a href="#" className="relative text-[0.9rem] md:text-[1.2rem] cursor-pointer hover:text-blue-600 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100 w-max">Testimonial</a>
+                    <SmartLink 
+                        href={{ pathname: "/[locale]/legal" }}
+                        className="relative text-[0.9rem] md:text-[1.2rem] cursor-pointer hover:text-blue-600 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100 w-max"
+                    >
+                        Legal Information
+                    </SmartLink>
                 </section>
                 <section className="flex flex-col gap-1">
                     <div className="text-[1.2rem] font-bold">Service</div>
