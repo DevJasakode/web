@@ -15,8 +15,8 @@ module.exports = {
       email: { allowNull: false, type: Sequelize.STRING },
       auto_reply_email: { allowNull: false, type: Sequelize.BOOLEAN },
       auto_reply_email_message: { allowNull: false, type: Sequelize.STRING },
-      forward_telegram_box: { allowNull: false, type: Sequelize.BOOLEAN },
-      forward_telegram_box_token: { allowNull: true, type: Sequelize.STRING },
+      forward_telegram_bot: { allowNull: false, type: Sequelize.BOOLEAN },
+      forward_telegram_bot_token: { allowNull: true, type: Sequelize.STRING },
       forward_whatsapp: { allowNull: false, type: Sequelize.BOOLEAN },
       forward_whatsapp_contact: { allowNull: true, type: Sequelize.STRING },
       created_at: {

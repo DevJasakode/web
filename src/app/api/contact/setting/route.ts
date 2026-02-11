@@ -26,3 +26,31 @@ export async function GET() {
     );
   }
 };
+
+
+export async function PATCH(request: Request) {
+  if (request.headers.get("Content-Type") !== "application/json") {
+    return NextResponse.json(
+      { error: "Tipe konten tidak dapat diproses" },
+      { status: 406 }
+    );
+  };
+  try {
+    const body = await request.json();
+    if (Object.keys(body).length > 0) {
+      const updated = await models.ContactSetting.update(body, { where: { id: 1 } });
+      return NextResponse.json(
+        updated,
+        { status: 200, statusText: "Success Update Contact Setting" }
+      );
+    }
+  } catch (err) {
+    return NextResponse.json(
+      {
+        error: "Gagal Login",
+        detail: err instanceof Error ? err.message : String(err),
+      },
+      { status: 500 }
+    );
+  }
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -13,36 +13,27 @@ import {
   Button,
   Divider,
   Grid,
+  FormControl,
 } from "@mui/material";
 import axios, { AxiosError } from "axios";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { ContactSettings as ContactSettingsModel } from "@/api/contact/setting/models";
 import { LoadingButton } from "@mui/lab";
+import Swal from "sweetalert2";
 
-/**
- * Tipe data contact settings
- */
-type ContactSettingsState = {
-  office_addres: string;
-  inboxEmail: string;
-  enableAutoReply: boolean;
-  autoReplyMessage: string;
-  notifyOnNewMessage: boolean;
-  allowAnonymousMessages: boolean;
-};
 
 
 const initialContactSettings: ContactSettingsModel = {
   id: 1,
-  address: "Srijaya, Kec. Belitang II, Kabupaten Ogan Komering Ulu Timur, Sumatera Selatan 32383",
-  phone: "+62 851 5900 3374",
-  email: "info@jasakode.com",
-  auto_reply_email: true,
-  auto_reply_email_message: "Terima kasih telah menghubungi kami. Pesan Anda telah diterima dan akan kami balas secepat mungkin.",
-  forward_telegram_box: true,
-  forward_telegram_box_token: "",
-  forward_whatsapp: true,
-  forward_whatsapp_contact: "+62 851 5900 3374",
+  address: "",
+  phone: "",
+  email: "",
+  auto_reply_email: false,
+  auto_reply_email_message: "",
+  forward_telegram_bot: false,
+  forward_telegram_bot_token: null,
+  forward_whatsapp: false,
+  forward_whatsapp_contact: null,
   created_at: new Date(),
   created_by: 1,
   updated_at: null,
@@ -53,36 +44,59 @@ const initialContactSettings: ContactSettingsModel = {
  * Halaman Contact Settings
  */
 export default function ContactSettings() {
-  const [settings, setSettings] =
-    useState<ContactSettingsState>({
-      office_addres: "Srijaya, Kec. Belitang II, Kabupaten Ogan Komering Ulu Timur, Sumatera Selatan 32383",
-      inboxEmail: "info@jasakode.com",
-      enableAutoReply: true,
-      autoReplyMessage:
-        "Terima kasih telah menghubungi kami. Pesan Anda telah diterima dan akan kami balas secepat mungkin.",
-      notifyOnNewMessage: true,
-      allowAnonymousMessages: false,
-    });
-
-  const [data, setData] = useState<ContactSettingsModel>(initialContactSettings);
   const [loading, setLoading] = useState<boolean>(false);
+  const [change, setChange] = useState<Record<string, any>>({});
+  const [currentData, setCurrentData] = useState<ContactSettingsModel>(initialContactSettings);
+  const [data, setData] = useState<ContactSettingsModel>(initialContactSettings);
 
-  /**
-   * Helper update state
-   */
-  const handleChange = <K extends keyof ContactSettingsState>(
-    key: K,
-    value: ContactSettingsState[K]
-  ) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
-  };
 
   /**
    * Dummy save handler
    */
-  const handleSave = () => {
-    console.log("CONTACT SETTINGS SAVED:", settings);
+  const handleSave = async () => {
+    // src/app/api/contact/setting
+    try {
+      setLoading(true);
+      const res = await axios.patch("/api/contact/setting", change, { withCredentials: true });
+      Swal.fire({
+        title: "Success",
+        text: res.statusText,
+        icon: "success",
+        closeButtonAriaLabel: 'Close',
+      }).finally(() => loadData());
+    } catch (error) {
+      const err: AxiosError = error as AxiosError;
+      Swal.fire({
+        title: err.message,
+        text: err.response?.statusText || err.message,
+        icon: 'error',
+        closeButtonAriaLabel: 'Close',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  /**
+   * Helper update state
+   */
+  const changeData = useCallback(
+    <K extends keyof ContactSettingsModel>(
+      key: K,
+      value: ContactSettingsModel[K]
+    ) => {
+      setData((prev) => ({ ...prev, [key]: value }));
+      setChange((prev) => {
+        const isSameAsInitial = currentData[key] === value;
+        if (isSameAsInitial) {
+          const { [key]: _, ...rest } = prev;
+          return rest;
+        }
+        return { ...prev, [key]: value };
+      });
+    },
+    [currentData]
+  );
 
 
   async function loadData() {
@@ -93,7 +107,9 @@ export default function ContactSettings() {
         if (!res.data) {
           throw Error("Settings Data not Found");
         }
-        setData(res.data)
+        setData(res.data);
+        setChange({});
+        setCurrentData(res.data);
       }
     } catch (error) {
       console.error(error);
@@ -102,6 +118,7 @@ export default function ContactSettings() {
     }
   };
 
+  // Hooks
   useEffect(() => {
     loadData();
   }, []);
@@ -129,57 +146,78 @@ export default function ContactSettings() {
                   Office Addres
                 </Typography>
                 <Stack spacing={2}>
-                  <TextField
-                    spellCheck={false}
-                    size="small"
-                    fullWidth
-                    helperText="All contact messages will be sent to this email"
-                    multiline
-                    minRows={3}
-                    maxRows={10}
-                    value={data.address}
-                    onChange={(e) => setData(pre => ({ ...pre, address: e.target.value }))}
-                  />
+                  <FormControl>
+                    <TextField
+                      spellCheck={false}
+                      size="small"
+                      fullWidth
+                      helperText="All contact messages will be sent to this email"
+                      multiline
+                      minRows={3}
+                      maxRows={10}
+                      value={data.address}
+                      onChange={(e) => changeData("address", e.target.value)}
+                    />
+                  </FormControl>
                 </Stack>
               </CardContent>
             </Card>
-            {/* ===== Auto Reply Settings ===== */}
+            {/* ===== Inbox Settings ===== */}
             <Card>
               <CardContent>
-                <Typography fontWeight={600} mb={2}>
-                  Auto Reply
-                </Typography>
-
                 <Stack spacing={2}>
                   <FormControlLabel
                     control={
                       <Switch
-                        checked={settings.enableAutoReply}
-                        onChange={(e) =>
-                          handleChange(
-                            "enableAutoReply",
-                            e.target.checked
-                          )
-                        }
+                        checked={data.forward_telegram_bot}
+                        onChange={(e) => changeData("forward_telegram_bot", e.target.checked)}
                       />
                     }
-                    label="Enable automatic reply"
+                    label="Forwad Message on telegram bot"
                   />
-
-                  <TextField
-                    label="Auto Reply Message"
-                    multiline
-                    minRows={3}
-                    fullWidth
-                    disabled={!settings.enableAutoReply}
-                    value={settings.autoReplyMessage}
-                    onChange={(e) =>
-                      handleChange(
-                        "autoReplyMessage",
-                        e.target.value
-                      )
+                  <Box>
+                    <Typography sx={{ mb: 0.5 }}>Telegram Bot Token</Typography>
+                    <FormControl fullWidth>
+                      <TextField
+                        spellCheck={false}
+                        size="small"
+                        fullWidth
+                        helperText="All contact messages will be sent to this email"
+                        disabled={!data.forward_telegram_bot}
+                        value={data.forward_telegram_bot_token || ""}
+                        onChange={(e) => changeData("forward_telegram_bot_token", e.target.value)}
+                      />
+                    </FormControl>
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Stack spacing={2}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={data.forward_whatsapp}
+                        onChange={(e) => changeData("forward_whatsapp", e.target.checked)}
+                      />
                     }
+                    label="Forwad Message on telegram bot"
                   />
+                  <Box>
+                    <Typography sx={{ mb: 0.5 }}>Whatsapp Contact</Typography>
+                    <FormControl fullWidth>
+                      <TextField
+                        spellCheck={false}
+                        size="small"
+                        fullWidth
+                        disabled={!data.forward_whatsapp}
+                        helperText="All contact messages will be sent to this email"
+                        value={data.forward_whatsapp_contact || ""}
+                        onChange={(e) => changeData("forward_whatsapp_contact", e.target.value)}
+                      />
+                    </FormControl>
+                  </Box>
                 </Stack>
               </CardContent>
             </Card>
@@ -187,13 +225,12 @@ export default function ContactSettings() {
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <Stack spacing={3}>
-            {/* ===== Inbox Settings ===== */}
+            {/* ===== Inbox Contact Settings ===== */}
             <Card>
               <CardContent>
                 <Typography fontWeight={600} mb={2}>
                   Inbox Email
                 </Typography>
-
                 <Stack spacing={2}>
                   <TextField
                     spellCheck={false}
@@ -201,17 +238,7 @@ export default function ContactSettings() {
                     fullWidth
                     helperText="All contact messages will be sent to this email"
                     value={data.email}
-                    onChange={(e) => setData(pre => ({ ...pre, email: e.target.value }))}
-                  />
-
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={data.forward_telegram_box}
-                        onChange={(e) => setData(pre => ({ ...pre, forward_telegram_box: e.target.checked }))}
-                      />
-                    }
-                    label="Notify me in telegram bot a new message arrives"
+                    onChange={(e) => changeData("email", e.target.value)}
                   />
                 </Stack>
               </CardContent>
@@ -229,23 +256,41 @@ export default function ContactSettings() {
                     fullWidth
                     helperText="All contact messages will be sent to this email"
                     value={data.phone}
-                    onChange={(e) => setData(pre => ({ ...pre, phone: e.target.value }))}
+                    onChange={(e) => changeData("phone", e.target.value)}
                   />
+                </Stack>
+              </CardContent>
+            </Card>
+            {/* ===== Auto Reply Settings ===== */}
+            <Card>
+              <CardContent>
+                <Typography fontWeight={600} mb={2}>
+                  Auto Reply
+                </Typography>
 
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={settings.notifyOnNewMessage}
-                        onChange={(e) =>
-                          handleChange(
-                            "notifyOnNewMessage",
-                            e.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label="Notify me when a new message arrives"
-                  />
+                <Stack spacing={2}>
+                  <FormControl>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={data.auto_reply_email}
+                          onChange={(e) => changeData("auto_reply_email", e.target.checked)}
+                        />
+                      }
+                      label="Enable automatic reply"
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <TextField
+                      label="Auto Reply Message"
+                      multiline
+                      minRows={3}
+                      fullWidth
+                      disabled={!data.auto_reply_email}
+                      value={data.auto_reply_email_message}
+                      onChange={(e) => changeData("auto_reply_email_message", e.target.value)}
+                    />
+                  </FormControl>
                 </Stack>
               </CardContent>
             </Card>
@@ -256,41 +301,14 @@ export default function ContactSettings() {
 
 
       <Stack spacing={3} sx={{ mt: 3 }}>
-
-        {/* ===== Privacy & Rules ===== */}
-        <Card>
-          <CardContent>
-            <Typography fontWeight={600} mb={2}>
-              Rules & Privacy
-            </Typography>
-
-            <Stack spacing={1}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.allowAnonymousMessages}
-                    onChange={(e) =>
-                      handleChange(
-                        "allowAnonymousMessages",
-                        e.target.checked
-                      )
-                    }
-                  />
-                }
-                label="Allow anonymous messages"
-              />
-            </Stack>
-          </CardContent>
-        </Card>
-
         <Divider />
-
         {/* ===== Save ===== */}
         <Stack direction="row" justifyContent="flex-end">
           <LoadingButton
             variant="contained"
             startIcon={<SaveOutlinedIcon />}
             loading={loading}
+            disabled={Object.keys(change).length === 0}
             onClick={handleSave}
           >
             Save Settings

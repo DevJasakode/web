@@ -21,8 +21,8 @@ export default function ContactSettingFactory(sequelize: Sequelize) {
         declare auto_reply_email: boolean;
         declare auto_reply_email_message: string;
 
-        declare forward_telegram_box: boolean;
-        declare forward_telegram_box_token: string | null;
+        declare forward_telegram_bot: boolean;
+        declare forward_telegram_bot_token: string | null;
 
         declare forward_whatsapp: boolean;
         declare forward_whatsapp_contact: string | null;
@@ -75,12 +75,12 @@ export default function ContactSettingFactory(sequelize: Sequelize) {
                 allowNull: false,
             },
 
-            forward_telegram_box: {
+            forward_telegram_bot: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
             },
 
-            forward_telegram_box_token: {
+            forward_telegram_bot_token: {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
