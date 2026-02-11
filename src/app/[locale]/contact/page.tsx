@@ -23,10 +23,11 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PhoneIcon from '@mui/icons-material/Phone'
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import Swal from "sweetalert2"
-
+import { ContactSettings } from "@/api/contact/setting/models";
+import ForwardToInboxOutlinedIcon from '@mui/icons-material/ForwardToInboxOutlined';
 
 interface FormError {
   email: boolean;
@@ -54,11 +55,17 @@ const initialForm: Form = {
 
 
 
+interface FAQ {
+  question: string;
+  answer: string;
+};
+
 
 
 export default function Contact() {
   const [form, setForm] = useState<Form>(initialForm);
   const [loading, setLoading] = useState<boolean>(false);
+  const [setting, setSetting] = useState<ContactSettings | null>();
 
   const send = useCallback(() => {
     setLoading(true);
@@ -106,6 +113,19 @@ export default function Contact() {
       .finally(() => setLoading(false));
   }, [form]);
 
+  const loadContactSetting = useCallback(async () => {
+    try {
+      const res = await axios.get<ContactSettings>("/api/contact/setting", { withCredentials: true });
+      if (res.status >= 200 && res.status <= 201) {
+        setSetting(res.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [setSetting]);
+
+  // Hooks
+  useEffect(() => { loadContactSetting() }, [setSetting]);
 
   return (
     <Box sx={{ py: { xs: 8, md: 14 } }} component={Paper}>
@@ -145,9 +165,7 @@ export default function Contact() {
                 <Box>
                   <Typography fontWeight={600}>Our office</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Srijaya, Kec. Belitang II, Kabupaten Ogan Komering Ulu Timur,
-                    <br />
-                    Sumatera Selatan 32383
+                    {setting?.address}
                   </Typography>
                 </Box>
               </Box>
@@ -165,9 +183,9 @@ export default function Contact() {
                 <Box>
                   <Typography fontWeight={600}>Get in touch</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    +62 851 5900 3374
+                    {setting?.phone}
                     <br />
-                    info@jasakode.com
+                    {setting?.email}
                   </Typography>
                 </Box>
               </Box>
@@ -260,7 +278,6 @@ export default function Contact() {
                     />
                   </FormControl>
                   <LoadingButton
-                    size="small"
                     variant="contained"
                     loading={loading}
                     sx={{
@@ -270,6 +287,7 @@ export default function Contact() {
                       borderRadius: 2,
                     }}
                     onClick={send}
+                    startIcon={<ForwardToInboxOutlinedIcon />}
                   >
                     Submit
                   </LoadingButton>

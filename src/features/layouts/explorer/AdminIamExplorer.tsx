@@ -1,5 +1,6 @@
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import PeopleIcon from "@mui/icons-material/People";
+import RestoreOutlinedIcon from '@mui/icons-material/RestoreOutlined';
 
 import {
     AdminExplorer,
@@ -18,20 +19,13 @@ const menuData: AdminExplorerMenuItem[] = [
         id: "users",
         label: "Users",
         icon: <PeopleIcon fontSize="small" />,
-        children: [
-            {
-                id: "users-list",
-                label: "User List",
-                icon: <PeopleIcon fontSize="small" />,
-                path: "/[locale]/admin/iam/user"
-            },
-            {
-                id: "users-role",
-                label: "User Roles",
-                icon: <PeopleIcon fontSize="small" />,
-                path: "/[locale]/admin/iam/user/role"
-            },
-        ],
+        path: "/[locale]/admin/iam/user"
+    },
+    {
+        id: "users-history",
+        label: "Users History",
+        icon: <RestoreOutlinedIcon fontSize="small" />,
+        path: "/[locale]/admin/iam/user-history"
     },
 ];
 

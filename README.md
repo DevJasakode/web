@@ -242,3 +242,7 @@ PT. Agartha Inovasi Holdings
 
 npx sequelize-cli migration:generate --name create-about-team-social-media
 npx sequelize-cli seed:generate --name about-team
+
+
+npx sequelize-cli migration:generate --name create-contact-settings
+npx sequelize-cli seed:generate --name contact-settings

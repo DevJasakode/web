@@ -9,7 +9,7 @@ import ContactInboxFactory from './ContactInbox';
 import DocsFactory from './Docs';
 import AboutTeamFactory from './AboutTeam';
 import AboutTeamSocialMediaFactory from './AboutTeamSocialMedia';
-
+import ContactSettingFactory from './ContactSettings';
 
 
 
@@ -92,11 +92,13 @@ export const models = {
   User: UserFactory(sequelize),
   Authentication: AuthenticationFactory(sequelize),
   DtpKpu: DtpKpuFactory(sequelize),
-  ContactInbox: ContactInboxFactory(sequelize),
   Docs: DocsFactory(sequelize),
 
   AboutTeam: AboutTeamFactory(sequelize),
   AboutTeamSocialMedia: AboutTeamSocialMediaFactory(sequelize),
+
+  ContactInbox: ContactInboxFactory(sequelize),
+  ContactSetting: ContactSettingFactory(sequelize),
 };
 
 // jalankan associate SETELAH semua model ada
