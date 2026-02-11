@@ -50,7 +50,7 @@ export default function LegalContactInformationPage() {
               </Typography>
 
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Stack spacing={1}>
                     <BusinessIcon color="primary" />
                     <Typography fontWeight={600}>
@@ -62,7 +62,7 @@ export default function LegalContactInformationPage() {
                   </Stack>
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Stack spacing={1}>
                     <LocationOnIcon color="primary" />
                     <Typography fontWeight={600}>
@@ -76,7 +76,7 @@ export default function LegalContactInformationPage() {
                   </Stack>
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Stack spacing={1}>
                     <GavelIcon color="primary" />
                     <Typography fontWeight={600}>
@@ -88,7 +88,7 @@ export default function LegalContactInformationPage() {
                   </Stack>
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Stack spacing={1}>
                     <PrivacyTipIcon color="primary" />
                     <Typography fontWeight={600}>
@@ -100,7 +100,7 @@ export default function LegalContactInformationPage() {
                   </Stack>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Stack spacing={1}>
                     <EmailIcon color="primary" />
                     <Typography fontWeight={600}>
