@@ -12,10 +12,8 @@ import type {
   Pillar,
   ValueItem,
 } from "./types";
-import { createRoot } from 'react-dom/client';
-import { StrictMode } from 'react';
 import { TeamShowcase } from "./TeamShowcase";
-
+import ExpertiseShowcase from "./ExpertiseShowcase";
 
 const introStats: IntroStat[] = [
   { label: "Tahun pengalaman", value: "8+" },
@@ -105,7 +103,8 @@ export default function Contact() {
         <PillarsSection pillars={pillars} />
         <JourneySection journey={journey} />
         <ValuesSection values={values} />
-        <TeamShowcase />
+        <ExpertiseShowcase />
+        {/* <TeamShowcase /> */}
         <CallToActionSection />
       </div>
     </div>
