@@ -11,12 +11,14 @@ import {
   ListItemButton,
   Divider,
   Chip,
+  Grid,
 } from "@mui/material";
 import { Inbox } from "@/api/contact/inbox/models";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
-
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { LoadingButton } from "@mui/lab";
 
 interface Filter {
   limit: number;
@@ -74,8 +76,44 @@ export default function ContactInbox() {
     }
   }, [filter, setInbox]);
 
+  const removeInbox = useCallback(async (id: number) => {
+    try {
+      setLoading(true);
+      const res = await axios.delete(`/api/contact/inbox/${id}`, { withCredentials: true, timeout: 3000 });
+      Swal.fire({
+        title: "Success",
+        text: res.statusText,
+        icon: 'success',
+        closeButtonAriaLabel: 'Close',
+      });
+    } catch (error) {
+      const err: AxiosError = error as AxiosError;
+      Swal.fire({
+        title: err.message,
+        text: err.response?.statusText || err.message,
+        icon: 'error',
+        closeButtonAriaLabel: 'Close',
+      });
+    } finally {
+      LoadInbox();
+      setActiveMessageId(0);
+    }
+  }, [setLoading, LoadInbox]);
+
+  const readInbox = useCallback(async (id: number) => {
+    await axios.patch(`/api/contact/inbox/${id}`, { withCredentials: true, timeout: 3000 }).finally(() => {
+      LoadInbox();
+    });
+  }, [LoadInbox]);
+
   // Hooks
   useEffect(() => { LoadInbox() }, [filter]);
+
+  useEffect(() => {
+    if(activeMessage && activeMessage.unread) {
+      readInbox(activeMessageId);
+    }
+  }, [activeMessageId]);
 
   return (
     <Box sx={{ p: 3 }}>
@@ -160,20 +198,40 @@ export default function ContactInbox() {
               <CardContent>
                 {activeMessage ? (
                   <Stack spacing={2}>
-                    <Stack spacing={0.5}>
-                      <Typography fontWeight={600}>
-                        {activeMessage.name}
-                      </Typography>
-                      <Typography fontSize={13} color="text.secondary">
-                        {activeMessage.name} — {activeMessage.email}
-                      </Typography>
-                      <Typography
-                        fontSize={12}
-                        color="text.disabled"
-                      >
-                        {activeMessage.created_at}
-                      </Typography>
-                    </Stack>
+                    <Grid container spacing={3}>
+                      <Grid size={{ xs: 12, md: 6 }}>
+                        <Stack spacing={0.5}>
+                          <Typography fontWeight={600}>
+                            {activeMessage.name}
+                          </Typography>
+                          <Typography fontSize={13} color="text.secondary">
+                            {activeMessage.name} — {activeMessage.email}
+                          </Typography>
+                          <Typography
+                            fontSize={12}
+                            color="text.disabled"
+                          >
+                            {activeMessage.created_at}
+                          </Typography>
+                        </Stack>
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 6 }}>
+                        <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
+                          <LoadingButton
+                            variant="outlined"
+                            color="error"
+                            startIcon={<DeleteOutlinedIcon />}
+                            loading={loading}
+                            onClick={() => removeInbox(activeMessage.id)}
+                          >
+                            Remove
+                          </LoadingButton>
+                        </Box>
+                      </Grid>
+                    </Grid>
+
+
+                    {/* DeleteOutlinedIcon */}
 
                     <Divider />
 
