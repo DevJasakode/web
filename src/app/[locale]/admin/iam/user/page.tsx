@@ -9,6 +9,16 @@ import {
     Divider,
     Button,
     Paper,
+    Modal,
+    Stack,
+    Typography,
+    Avatar,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Switch,
+    FormControlLabel,
 } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -16,9 +26,10 @@ import SimCardDownloadOutlinedIcon from '@mui/icons-material/SimCardDownloadOutl
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import axios from "axios";
-
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { MorphingUserDetail } from "./UserDetail";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 
 
 interface User {
@@ -100,10 +111,245 @@ const initialFilter: Filter = {
 }
 
 
+
+interface RemoveUserConfirmationProps {
+    open: boolean;
+    user?: User;
+    onClose?: () => void;
+    onOk?: (user?: User) => void;
+    onCancel?: (user?: User) => void;
+}
+
+const modalStyle = {
+    position: "absolute" as const,
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 420,
+    bgcolor: "background.paper",
+    borderRadius: 3,
+    boxShadow: 24,
+    p: 4,
+};
+
+export function RemoveUserConfirmation({
+    open,
+    user,
+    onClose,
+    onOk,
+    onCancel,
+}: RemoveUserConfirmationProps) {
+
+    const handleClose = () => {
+        onClose?.();
+        onCancel?.(user);
+    };
+
+    const handleConfirm = () => {
+        onOk?.(user);
+    };
+
+    return (
+        <Modal open={open} onClose={handleClose}>
+            <Box sx={modalStyle}>
+                <Stack spacing={2} alignItems="center" textAlign="center">
+
+                    <WarningAmberRoundedIcon
+                        color="warning"
+                        sx={{ fontSize: 60 }}
+                    />
+
+                    <Typography variant="h6" fontWeight={600}>
+                        Konfirmasi Hapus User
+                    </Typography>
+
+                    <Divider sx={{ width: "100%" }} />
+
+                    <Stack direction="row" spacing={2} alignItems="center">
+                        <Avatar
+                            src={user?.avatar ?? undefined}
+                            alt={user?.username}
+                        />
+                        <Box textAlign="left">
+                            <Typography fontWeight={600}>
+                                {user?.username ?? "-"}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {user?.email ?? "-"}
+                            </Typography>
+                        </Box>
+                    </Stack>
+
+                    <Typography variant="body2" color="text.secondary">
+                        Apakah kamu yakin ingin menghapus user ini?
+                        Tindakan ini tidak dapat dibatalkan.
+                    </Typography>
+
+                    <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                        <Button
+                            variant="outlined"
+                            color="inherit"
+                            fullWidth
+                            onClick={handleClose}
+                        >
+                            Batal
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="error"
+                            fullWidth
+                            onClick={handleConfirm}
+                        >
+                            Hapus
+                        </Button>
+                    </Stack>
+
+                </Stack>
+            </Box>
+        </Modal>
+    );
+};
+
+
+
+interface UserDetailFormProps {
+    open: boolean;
+    user?: User;
+    loading?: boolean;
+    onClose?: () => void;
+    onSubmit?: (updatedUser: Partial<User>) => void;
+}
+
+export function UserDetailForm({
+    open,
+    user,
+    loading = false,
+    onClose,
+    onSubmit,
+}: UserDetailFormProps) {
+
+    const [form, setForm] = useState<Partial<User>>({});
+
+    useEffect(() => {
+        if (user) {
+            setForm({
+                username: user.username,
+                email: user.email,
+                verified_email: user.verified_email,
+            });
+        }
+    }, [user]);
+
+    const handleChange = (
+        field: keyof User,
+        value: string | null
+    ) => {
+        setForm(prev => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    const handleSubmit = () => {
+        if (!user) return;
+
+        onSubmit?.({
+            id: user.id,
+            ...form,
+        });
+    };
+
+    return (
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+            <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <EditRoundedIcon color="primary" />
+                Detail User
+            </DialogTitle>
+
+            <DialogContent dividers>
+                <Stack spacing={3}>
+
+                    <Stack direction="row" spacing={2} alignItems="center">
+                        <Avatar
+                            src={user?.avatar ?? undefined}
+                            alt={user?.username}
+                            sx={{ width: 64, height: 64 }}
+                        />
+                        <Stack>
+                            <Typography fontWeight={600}>
+                                {user?.username}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                ID: {user?.id}
+                            </Typography>
+                        </Stack>
+                    </Stack>
+
+                    <Divider />
+
+                    <TextField
+                        label="Username"
+                        fullWidth
+                        value={form.username ?? ""}
+                        onChange={(e) =>
+                            handleChange("username", e.target.value)
+                        }
+                    />
+
+                    <TextField
+                        label="Email"
+                        type="email"
+                        fullWidth
+                        value={form.email ?? ""}
+                        onChange={(e) =>
+                            handleChange("email", e.target.value)
+                        }
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={!!form.verified_email}
+                                onChange={(e) =>
+                                    handleChange(
+                                        "verified_email",
+                                        e.target.checked
+                                            ? form.email ?? ""
+                                            : null
+                                    )
+                                }
+                            />
+                        }
+                        label="Email Terverifikasi"
+                    />
+
+                </Stack>
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={onClose} disabled={loading}>
+                    Batal
+                </Button>
+
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                >
+                    Simpan Perubahan
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
+
 export default function User() {
     const [store, setStore] = useState<Store>(initialStore);
     const [filter, setFilter] = useState<Filter>(initialFilter);
     const [rows, setRows] = useState<{ count: number, data: User[] }>({ count: dummyUsers.length, data: dummyUsers });
+    const [removeUser, setRemoveUser] = useState<User | null>(null);
 
     const columns: GridColDef<User>[] = [
         { field: "id", headerName: "ID", width: 70, disableColumnMenu: true },
@@ -151,7 +397,9 @@ export default function User() {
                         <IconButton size="small" onClick={() => setStore(pre => ({ ...pre, user_detail: params.row.id }))}>
                             <MoreVertOutlinedIcon fontSize="small" />
                         </IconButton>
-                        <IconButton size="small" color="error">
+                        <IconButton size="small" color="error"
+                            onClick={() => setRemoveUser(params.row)}
+                        >
                             <DeleteOutlineOutlinedIcon fontSize="small" />
                         </IconButton>
                     </div>
@@ -162,7 +410,7 @@ export default function User() {
 
     function load() {
         axios.get<{ count: number, data?: User[] | null }>(`/api/user?limit=${filter.pageSize}&offset=${filter.page * filter.pageSize}`).then(res => {
-            if(res.status >= 200 && res.status <= 201, res.data) {
+            if (res.status >= 200 && res.status <= 201, res.data) {
                 setRows({ count: res.data.count, data: res.data.data || [] });
             }
         }).catch(err => console.error(err));
@@ -176,9 +424,25 @@ export default function User() {
 
     return (
         <Box>
-            <MorphingUserDetail
+        
+
+            <UserDetailForm
                 open={store.user_detail !== 0}
+                user={rows.data.find(item => (item.id == store.user_detail))}
                 onClose={() => setStore(pre => ({ ...pre, user_detail: 0 }))}
+                onSubmit={(usr) => {
+                    console.log(usr)
+                }}
+            />
+
+            <RemoveUserConfirmation
+                open={removeUser !== null}
+                user={removeUser || undefined}
+                onClose={() => setRemoveUser(null)}
+                onCancel={() => setRemoveUser(null)}
+                onOk={usr => {
+                    console.log(usr)
+                }}
             />
 
             <Box sx={{ flexGrow: 1, sx: 2, mb: 3 }}>
@@ -209,7 +473,7 @@ export default function User() {
                     </Grid>
                 </Grid>
             </Box>
-         
+
 
 
             <Box component={Paper} sx={{ width: "100%" }}>
@@ -227,4 +491,4 @@ export default function User() {
             </Box>
         </Box>
     )
-}
+};
