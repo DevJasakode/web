@@ -45,3 +45,5 @@ next-env.d.ts
 public/database.sqlite
 public/dptkpu2m.csv
 database.sqlite
+
+public/storage

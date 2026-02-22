@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -45,6 +45,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Dropzone, DropzoneRefObject } from "@/components/form/Dropzone";
 
 import { FormFolder } from "./FormFolder";
+import { FormFile } from "./FormFile";
 import { FormCreateFolder } from "./FormCreateFolder";
 
 interface Form {
@@ -78,14 +79,36 @@ export default function ArticleMedia() {
     },
   ];
 
-
   const sendFiles = () => {
     if (dropzoneRef && dropzoneRef.current) {
       console.log(dropzoneRef.current.getFiles())
     }
   };
 
+  const con = useCallback(() => {
+    try {
+      console.log("Connect")
+      const ws = new WebSocket("ws://localhost:3000/api");
 
+      ws.onopen = () => {
+        ws.send("Hello Server");
+      };
+
+      ws.onmessage = (event) => {
+        console.log(event.data);
+      };
+
+      ws.onerror = (err) => console.log(err)
+      ws.onclose = (err) => console.log(err)
+    } catch (error) {
+      console.error(error)
+    }
+  }, []);
+
+  const load = useCallback(() => {
+
+  }, []);
+  
 
   return (
     <Box sx={{ p: 3 }}>
@@ -102,38 +125,12 @@ export default function ArticleMedia() {
           setForm(pre => ({ ...pre, uploadFolder: false }))
         }}
       />
-
-
-      <Dialog
+      <FormFile
         open={form.uploadFile}
-        maxWidth={"sm"}
-        fullWidth
-        onClose={() => setForm(pre => ({ ...pre, uploadFile: false }))}
-      >
-        <DialogTitle>Set backup account</DialogTitle>
-        <DialogContent>
-          <Dropzone
-            ref={dropzoneRef}
-            multiple
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => {
-              setForm(pre => ({ ...pre, uploadFile: false }))
-              dropzoneRef.current?.clear();
-            }}
-            startIcon={<CloseIcon />}
-          >Close</Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={sendFiles}
-          >Upload</Button>
-        </DialogActions>
-      </Dialog>
+        onClose={() => {
+          setForm(pre => ({ ...pre, uploadFile: false }))
+        }}
+      />
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>

@@ -21,6 +21,7 @@
     "@mui/material": "^7.3.7",
     "@mui/x-data-grid": "^8.26.0",
     "@noble/secp256k1": "^3.0.0",
+    "@types/ws": "^8.18.1",
     "@xyflow/react": "^12.10.0",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
@@ -44,7 +45,8 @@
     "speakeasy": "^2.0.0",
     "sqlite3": "^5.0.2",
     "sweetalert2": "^11.26.17",
-    "three": "^0.182.0"
+    "three": "^0.182.0",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "@types/node": "^20",

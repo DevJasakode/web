@@ -17,10 +17,10 @@ import {
   DialogActions,
   CircularProgress,
 } from "@mui/material";
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import { Locale } from "@/i18n/config";
 
 function GithubIcon() {
   return (
@@ -230,6 +230,7 @@ export default function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<Form>(initialForm);
+  const { locale } = useParams<{ locale: Locale }>();
 
 
   const createSession = useCallback(async () => {
@@ -310,7 +311,7 @@ export default function Login() {
         withCredentials: true,
       });
       if (res.status >= 200 && res.status <= 201) {
-        router.replace("/admin");
+        router.replace(`/${locale}/admin`);
       } else {
         Swal.fire({
           title: "Gagal Login",
