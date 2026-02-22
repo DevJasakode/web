@@ -8,7 +8,6 @@ import {
     AdminExplorerMenuItem,
 } from "./AdminExplorer";
 
-import { Route } from "@/lib/route";
 
 
 const menuData: AdminExplorerMenuItem[] = [
