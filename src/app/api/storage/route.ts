@@ -31,10 +31,10 @@ export async function GET(request: NextRequest) {
                 model: models.StorageMeta,
                 as: "meta",
             },
-            {
-                model: models.StorageAccessToken,
-                as: "access_tokens",
-            }
+            // {
+            //     model: models.StorageAccessToken,
+            //     as: "access_tokens",
+            // }
         ]
     });
     const storage_count = await models.Storage.count({

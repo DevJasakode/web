@@ -9,32 +9,32 @@ import {
 } from "sequelize";
 import type { StorageMeta } from "./StorageMetaFactory";
 
+export class Storage extends Model<
+    InferAttributes<Storage>,
+    InferCreationAttributes<Storage>
+> {
+    declare id: CreationOptional<number>;
+    declare private: CreationOptional<boolean>;
+    declare prefix: string;
+    declare name: string;
+    declare hash: string;
+    declare size: number;
+    declare content_type: string;
+
+    declare created_at: CreationOptional<Date>;
+    declare created_by: number;
+
+    declare updated_at: Date | null;
+    declare updated_by: number | null;
+
+    declare deleted_at: Date | null;
+    declare deleted_by: number | null;
+
+    // relasi
+    declare meta?: NonAttribute<StorageMeta[]>;
+}
 
 export default function StorageFactory(sequelize: Sequelize) {
-    class Storage extends Model<
-        InferAttributes<Storage>,
-        InferCreationAttributes<Storage>
-    > {
-        declare id: CreationOptional<number>;
-        declare private: CreationOptional<boolean>;
-        declare prefix: string;
-        declare name: string;
-        declare hash: string;
-        declare size: number;
-        declare content_type: string;
-
-        declare created_at: CreationOptional<Date>;
-        declare created_by: number;
-
-        declare updated_at: Date | null;
-        declare updated_by: number | null;
-
-        declare deleted_at: Date | null;
-        declare deleted_by: number | null;
-
-        // relasi
-        declare meta?: NonAttribute<StorageMeta[]>;
-    }
 
     Storage.init(
         {
