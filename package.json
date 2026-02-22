@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "gen:i18n": "tsc script/i18n-dictionaries.ts --outDir script && node script/script/i18n-dictionaries.js",
+    "i": "npm install --legacy-peer-deps",
     "clean": "test -d .next && rm -r .next",
     "dev": "next dev --turbo",
     "build": "npm run clean && next build",

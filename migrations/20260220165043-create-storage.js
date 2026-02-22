@@ -118,21 +118,6 @@ module.exports = {
         defaultValue: Sequelize.literal("(strftime('%s','now'))")
       }
     });
-
-  //   await queryInterface.addConstraint('storages', {
-  //     fields: ['prefix'],
-  //     type: 'check',
-  //     name: 'storages_prefix_valid_path_check',
-  //     where: Sequelize.literal(`
-  //   prefix LIKE '/storage%' 
-  //   AND instr(prefix, '..') = 0
-  //   AND instr(prefix, '//') = 0
-  //   AND (
-  //     prefix = '/storage'
-  //     OR substr(prefix, -1) != '/'
-  //   )
-  // `)
-  //   });
   },
 
   async down(queryInterface, Sequelize) {

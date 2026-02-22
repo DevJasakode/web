@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Box,
   Card,
@@ -18,9 +18,11 @@ import {
   Paper,
   IconButton,
 } from "@mui/material";
-
+import axios, { AxiosError } from "axios";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { ArticleCategories as ArticleCategoriesModel } from "@/models/ArticleCategories";
+
 
 /**
  * Tipe data kategori
@@ -52,10 +54,24 @@ const dummyCategories: Category[] = [
   },
 ];
 
+
+interface Filter {
+  page: number;
+  limit: number;
+}
+
+const initialFilter: Filter = {
+  page: 0,
+  limit: 25,
+};
+
+// http://127.0.0.1:3000/api/article/categories
+
 export default function ArticleCategories() {
-  const [categories, setCategories] =
-    React.useState<Category[]>(dummyCategories);
-  const [newCategory, setNewCategory] = React.useState("");
+  const [data, setData] = useState<{ count: number, data: ArticleCategoriesModel[] | null }>();
+  const [filter, setFilter] = useState<Filter>(initialFilter);
+  const [categories, setCategories] = useState<Category[]>(dummyCategories);
+  const [newCategory, setNewCategory] = useState("");
 
   /**
    * Tambah kategori baru (dummy)
@@ -81,6 +97,21 @@ export default function ArticleCategories() {
   const handleDeleteCategory = (id: string) => {
     setCategories((prev) => prev.filter((cat) => cat.id !== id));
   };
+
+
+  const loadCategorys = useCallback(async() => {
+    const res = await axios.get("/api/article/categories", { withCredentials: true });
+    if(res.status >= 200 && res.status <= 201) {
+      console.log(res.status, res.statusText);
+      console.log(res.data);
+    };
+  }, [filter]);
+
+
+  // Hooks
+  useEffect(() => {
+    loadCategorys();
+  }, [filter]);
 
   return (
     <Box sx={{ p: 3, maxWidth: 700 }}>

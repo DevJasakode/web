@@ -55,7 +55,7 @@ export const FormFile = forwardRef<FormFileRef, FormFileProps>((props, ref) => {
                 formData.set("file", file);
 
                 try {
-                    const res = await axios.post("/api/storage", formData, { withCredentials: true });
+                    const res = await axios.post("/api/storage/file", formData, { withCredentials: true });
                     console.log(res)
                 } catch (error) {
                     console.error(error)   

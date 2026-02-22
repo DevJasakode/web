@@ -1,9 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import models, { sequelize } from "@/models";
+import models from "@/models";
 import { Op } from "sequelize";
-import { resolve, extname, dirname } from "path";
-import { createHash } from "crypto";
-import { mkdirSync, existsSync, writeFileSync } from "fs";
 
 export async function GET(request: NextRequest) {
     // ===========================================================
@@ -22,26 +19,26 @@ export async function GET(request: NextRequest) {
 
     // ===========================================================
 
-    const storages = await models.Storage.findAll({
+    const categorys = await models.ArticleCategories.findAll({
         limit,
         offset,
         where,
         include: [
             {
-                model: models.StorageMeta,
-                as: "meta",
+                model: models.ArticleCategories,
+                as: "children",
             },
-            // {
-            //     model: models.StorageAccessToken,
-            //     as: "access_tokens",
-            // }
+            {
+                model: models.ArticleCategories,
+                as: "parent",
+            },
         ]
     });
-    const storage_count = await models.Storage.count({
+    const category_count = await models.ArticleCategories.count({
         where,
     });
 
-    return NextResponse.json({ count: storage_count, data: storages }, {
+    return NextResponse.json({ count: category_count, data: categorys }, {
         status: 200,
         statusText: "Success Find All Storage Object"
     });
