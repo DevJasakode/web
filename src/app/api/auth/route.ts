@@ -429,11 +429,33 @@ export class ECCWallet {
 
 // Get Authentication Session
 export async function GET(request: Request) {
-  return NextResponse.json({
-    name: "Antonius",
-    picture: "/Frame 1 3.png",
-    username: "antonius",
-  });
+  const cookiesValue = await cookies();
+  const user = await models.Auth.getUser(cookiesValue.get(COOKIE.AUTH)?.value || "");
+  if (user) {
+
+    user.password = "";
+    user.email = "";
+
+    return NextResponse.json(
+      user,
+      {
+        status: 200,
+        statusText: "Success Auth"
+      }
+    );
+  };
+
+  return NextResponse.json(
+    {
+      error: "Forbidden",
+      code: "INSUFFICIENT_PERMISSIONS",
+      message: "Your account does not have the required role to perform this action.",
+    },
+    {
+      status: 403,
+      statusText: "Your account does not have the required role to perform this action."
+    }
+  );
 };
 
 

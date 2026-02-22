@@ -31,6 +31,7 @@ import OndemandVideoOutlinedIcon from '@mui/icons-material/OndemandVideoOutlined
 import ApprovalOutlinedIcon from '@mui/icons-material/ApprovalOutlined';
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import axios from "axios";
 
 
 function ResponsiveGrid() {
@@ -236,6 +237,10 @@ export default function Dashboard() {
   }, []);
 
 
+  const testAuth = useCallback(() => {
+    axios.get("/api/auth", { withCredentials: true }).then(res => console.log(res.data));
+  }, []);
+
 
   return (
     <Box>
@@ -250,6 +255,7 @@ export default function Dashboard() {
               <Button
                 variant="outlined"
                 color="info"
+                onClick={testAuth}
               >Export</Button>
             </Box>
           </Grid>

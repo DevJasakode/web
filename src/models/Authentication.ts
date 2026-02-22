@@ -5,50 +5,56 @@ import {
     DataTypes,
     CreationOptional,
     Sequelize,
+    NonAttribute,
 } from "sequelize";
+import { User } from "./User";
+
+export class Authentication extends Model<
+    InferAttributes<Authentication>,
+    InferCreationAttributes<Authentication>
+> {
+    declare id: CreationOptional<number>;
+
+    declare accept: string | null;
+    declare accept_encoding: string | null;
+    declare accept_language: string | null;
+    declare connection: string | null;
+    declare cookie: string | null;
+    declare host: string | null;
+    declare referer: string | null;
+
+    declare sec_ch_ua: string | null;
+    declare sec_ch_ua_mobile: string | null;
+    declare sec_ch_ua_platform: string | null;
+    declare sec_fetch_dest: string | null;
+    declare sec_fetch_mode: string | null;
+    declare sec_fetch_site: string | null;
+
+    declare user_agent: string | null;
+
+    declare x_forwarded_for: string | null;
+    declare x_forwarded_host: string | null;
+    declare x_forwarded_port: string | null;
+    declare x_forwarded_proto: string | null;
+
+    declare geo_status: "granted" | "denied" | "prompt" | "unsupported" | "error";
+    declare geo_error: string | null;
+    declare geo_accuracy: string | null;
+    declare geo_latitude: string | null;
+    declare geo_longitude: string | null;
+    declare geo_timestamp: string | null;
+
+    declare session: string;
+    declare user_id: number | null;
+
+    declare created_at: CreationOptional<Date>;
+    declare updated_at: CreationOptional<Date>;
+
+    // 👇 ini yang kurang
+    declare user?: NonAttribute<User>;
+}
 
 export default function AuthenticationFactory(sequelize: Sequelize) {
-    class Authentication extends Model<
-        InferAttributes<Authentication>,
-        InferCreationAttributes<Authentication>
-    > {
-        declare id: CreationOptional<number>;
-
-        declare accept: string | null;
-        declare accept_encoding: string | null;
-        declare accept_language: string | null;
-        declare connection: string | null;
-        declare cookie: string | null;
-        declare host: string | null;
-        declare referer: string | null;
-
-        declare sec_ch_ua: string | null;
-        declare sec_ch_ua_mobile: string | null;
-        declare sec_ch_ua_platform: string | null;
-        declare sec_fetch_dest: string | null;
-        declare sec_fetch_mode: string | null;
-        declare sec_fetch_site: string | null;
-
-        declare user_agent: string | null;
-
-        declare x_forwarded_for: string | null;
-        declare x_forwarded_host: string | null;
-        declare x_forwarded_port: string | null;
-        declare x_forwarded_proto: string | null;
-
-        declare geo_status: "granted" | "denied" | "prompt" | "unsupported" | "error";
-        declare geo_error: string | null;
-        declare geo_accuracy: string | null;
-        declare geo_latitude: string | null;
-        declare geo_longitude: string | null;
-        declare geo_timestamp: string | null;
-
-        declare session: string;
-        declare user_id: number | null;
-
-        declare created_at: CreationOptional<Date>;
-        declare updated_at: CreationOptional<Date>;
-    }
 
     Authentication.init(
         {
@@ -111,6 +117,11 @@ export default function AuthenticationFactory(sequelize: Sequelize) {
             underscored: true,
         }
     );
+
+    Authentication.belongsTo(User, {
+        foreignKey: "user_id",
+        as: "user",
+    });
 
     return Authentication;
 };
