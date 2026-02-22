@@ -4,11 +4,17 @@ import { useContext } from "react";
 import { CTX } from "./Application";
 import { Mode } from "@/config/theme";
 import { makeTheme } from "@/config/theme";
+import { User } from "@/models/User";
+
 
 interface ThemeContext {
     mode: Mode;
     setMode(mode: Mode): void;
 };
+
+interface AuthContext {
+    user: User | null;
+}
 
 export function useTheme(): ThemeContext {
     const ctx = useContext(CTX);
@@ -168,4 +174,19 @@ export function useStore(): StoreContext {
             }));
         },
     };
+};
+
+
+/**
+ * useAuth
+ * --------
+ * 
+ * @returns 
+ */
+export function useAuth(): AuthContext {
+    const ctx = useContext(CTX);
+
+    return {
+        user: ctx.user,
+    }
 };

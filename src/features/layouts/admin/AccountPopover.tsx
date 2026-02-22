@@ -22,6 +22,8 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { useAuth } from "@/context";
+
 
 
 interface Props {
@@ -33,6 +35,7 @@ export const AccountPopover: React.FC<Props> = ({
     onClick,
     onClose,
 }) => {
+    const { user } = useAuth();
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
 
@@ -87,8 +90,12 @@ export const AccountPopover: React.FC<Props> = ({
                     >
                         <Box>
                             <Stack alignItems="center" spacing={1}>
-                                <Avatar sx={{ width: 64, height: 64 }} />
-                                <Typography fontWeight={600}>John Doe</Typography>
+                                <Avatar
+                                    sx={{ width: 64, height: 64 }}
+                                    src={user?.avatar || ""}
+                                    alt={user?.username || "Avatar"}
+                                />
+                                <Typography fontWeight={600}>{user?.username}</Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     Frontend Engineer
                                 </Typography>

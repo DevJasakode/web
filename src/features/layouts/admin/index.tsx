@@ -21,13 +21,13 @@ import { AdminNavigation } from "../../navigation/AdminNavigation";
 import { AccountPopover } from "./AccountPopover";
 import { SettingPopover } from "./SettingPopover";
 import { useTheme } from "@/context";
-import Link from "next/link";
 import { useEffect } from "react";
 import { ButtonThemeToggle, ButtonLanguageSelector, ButtonBackToTop } from "@/components/button";
 import { locales, Locale } from "@/i18n/config";
 import { usePathname } from "next/navigation";
 import { useParams } from "next/navigation";
 import { SmartLink } from "@/components/link";
+
 
 const ACTIVITY_WIDTH = 48;
 const SIDEBAR_MIN = 180;
@@ -133,7 +133,7 @@ export function AdminLayout({
         };
     }, [pathname]);
 
-
+   
     return (
         <Box
             component={Paper}
