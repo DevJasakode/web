@@ -43,3 +43,46 @@ export async function GET(request: NextRequest) {
         statusText: "Success Find All Storage Object"
     });
 };
+
+interface Form {
+    parent_id?: number | null;
+    name: string;
+    slug: string;
+    logo?: string | null;
+    desc: string;
+};
+
+export async function POST(request: NextRequest) {
+    try {
+        const body: Form = await request.json();
+
+        const created = await models.ArticleCategories.create({
+            name: body.name,
+            slug: body.slug,
+            logo: body.logo,
+            created_at: new Date(),
+            created_by: 1,
+        });
+
+        return NextResponse.json(
+            {
+                success: true,
+                message: "Success create article category",
+                data: created,
+            },
+            { status: 201 }
+        );
+
+    } catch (error: any) {
+        console.error("Create Article Category Error:", error);
+
+        return NextResponse.json(
+            {
+                success: false,
+                message: "Failed Create Article Category",
+                error: error?.message ?? "Internal Server Error",
+            },
+            { status: 500 }
+        );
+    }
+};

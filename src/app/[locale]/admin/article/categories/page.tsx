@@ -17,11 +17,16 @@ import {
   TableContainer,
   Paper,
   IconButton,
+  Grid,
 } from "@mui/material";
 import axios, { AxiosError } from "axios";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { ArticleCategories as ArticleCategoriesModel } from "@/models/ArticleCategories";
+import { FormCategory } from "./Form";
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import AddIcon from '@mui/icons-material/Add';
+
 
 
 /**
@@ -65,45 +70,64 @@ const initialFilter: Filter = {
   limit: 25,
 };
 
-// http://127.0.0.1:3000/api/article/categories
+
+const columns: GridColDef<ArticleCategoriesModel>[] = [
+  {
+    field: 'name',
+    headerName: 'Name',
+    flex: 1,
+    disableColumnMenu: true,
+  },
+  {
+    field: 'slug',
+    headerName: 'Slug Name',
+    flex: 1,
+    disableColumnMenu: true,
+  },
+  {
+    field: 'created_at',
+    headerName: 'Created At',
+    width: 200,
+    disableColumnMenu: true,
+  },
+  {
+    field: 'created_by',
+    headerName: 'Created By',
+    width: 150,
+    disableColumnMenu: true,
+  },
+  {
+    field: "id",
+    headerName: "Action",
+    width: 100,
+    align: "right",
+    headerAlign: "center",
+    renderCell(params) {
+      return (
+        <Box>
+
+        </Box>
+      )
+    },
+  }
+];
 
 export default function ArticleCategories() {
   const [data, setData] = useState<{ count: number, data: ArticleCategoriesModel[] | null }>();
   const [filter, setFilter] = useState<Filter>(initialFilter);
-  const [categories, setCategories] = useState<Category[]>(dummyCategories);
-  const [newCategory, setNewCategory] = useState("");
+  const [form, setForm] = useState<{ loading: boolean, open: boolean }>({ loading: false, open: false });
 
   /**
    * Tambah kategori baru (dummy)
    */
   const handleAddCategory = () => {
-    if (!newCategory.trim()) return;
-
-    setCategories((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        name: newCategory.trim(),
-        articleCount: 0,
-      },
-    ]);
-
-    setNewCategory("");
+    setForm(pre => ({ ...pre, open: true }))
   };
 
-  /**
-   * Hapus kategori (dummy)
-   */
-  const handleDeleteCategory = (id: string) => {
-    setCategories((prev) => prev.filter((cat) => cat.id !== id));
-  };
-
-
-  const loadCategorys = useCallback(async() => {
-    const res = await axios.get("/api/article/categories", { withCredentials: true });
-    if(res.status >= 200 && res.status <= 201) {
-      console.log(res.status, res.statusText);
-      console.log(res.data);
+  const loadCategorys = useCallback(async () => {
+    const res = await axios.get<{ count: number, data: ArticleCategoriesModel[] | null }>("/api/article/categories", { withCredentials: true });
+    if (res.status >= 200 && res.status <= 201) {
+      setData(res.data);
     };
   }, [filter]);
 
@@ -114,92 +138,63 @@ export default function ArticleCategories() {
   }, [filter]);
 
   return (
-    <Box sx={{ p: 3, maxWidth: 700 }}>
+    <Box sx={{ p: 3 }}>
+      <FormCategory
+        open={form.open}
+        onClose={() => setForm(pre => ({ ...pre, open: false }))}
+        onCancel={() => setForm(pre => ({ ...pre, open: false }))}
+        onSave={() => {
+          setForm(pre => ({ ...pre, open: false }));
+          loadCategorys();
+        }}
+      />
       {/* ===== Page Header ===== */}
-      <Stack spacing={1} mb={3}>
-        <Typography variant="h5" fontWeight={600}>
-          Categories
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Organize articles into clear and meaningful groups
-        </Typography>
-      </Stack>
-
-      {/* ===== Create Category ===== */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Stack direction="row" spacing={2}>
-            <TextField
-              fullWidth
-              size="small"
-              label="New Category"
-              placeholder="e.g. Product, Engineering"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleAddCategory()}
-            />
+      <Grid spacing={3} container>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Stack spacing={1}>
+            <Typography variant="h5" fontWeight={600}>
+              Categories
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Organize articles into clear and meaningful groups
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: 'center',
+              justifyContent: "end",
+            }}
+          >
             <Button
               variant="contained"
-              startIcon={<AddOutlinedIcon />}
+              color="primary"
               onClick={handleAddCategory}
+              startIcon={<AddIcon />}
             >
-              Add
+              Create
             </Button>
-          </Stack>
-        </CardContent>
-      </Card>
-
-      {/* ===== Categories Table ===== */}
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Category</TableCell>
-              <TableCell>Articles</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {categories.map((category) => (
-              <TableRow key={category.id} hover>
-                <TableCell>
-                  <Typography fontSize={14} fontWeight={500}>
-                    {category.name}
-                  </Typography>
-                </TableCell>
-
-                <TableCell>{category.articleCount}</TableCell>
-
-                <TableCell align="right">
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => handleDeleteCategory(category.id)}
-                  >
-                    <DeleteOutlineOutlinedIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-
-            {/* Empty State */}
-            {categories.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <Typography
-                    align="center"
-                    color="text.secondary"
-                    fontSize={14}
-                  >
-                    No categories created yet
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          </Box>
+        </Grid>
+      </Grid>
+      <Box>
+        <DataGrid
+          rows={data?.data || []}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          checkboxSelection
+          disableRowSelectionOnClick
+        />
+      </Box>
     </Box>
   );
-}
+};
