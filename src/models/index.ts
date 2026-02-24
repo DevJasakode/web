@@ -14,8 +14,11 @@ import StorageFactory from "./StorageFactory";
 import StorageMetaFactory from "./StorageMetaFactory";
 import StorageAccessTokenFactory from "./StorageAccessTokenFactory";
 
+
 // Article
 import ArticleCategoriesFactory from './ArticleCategories';
+import ArticleTagFactory from './ArticleTag';
+
 
 const env = process.env.NODE_ENV || 'development'
 const config = configAll[env] as Options
@@ -100,6 +103,7 @@ const StorageAccessToken = StorageAccessTokenFactory(sequelize);
 
 // Article
 const ArticleCategories = ArticleCategoriesFactory(sequelize);
+const ArticleTag = ArticleTagFactory(sequelize);
 
 /* ===========================
    Associations
@@ -186,6 +190,7 @@ export const models = {
   StorageAccessToken,
 
   ArticleCategories,
+  ArticleTag,
 };
 
 /* ===========================

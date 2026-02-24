@@ -1,23 +1,14 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Fragment } from "react";
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Stack,
-  TextField,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableContainer,
-  Paper,
   IconButton,
   Grid,
+  Avatar,
 } from "@mui/material";
 import axios, { AxiosError } from "axios";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -26,6 +17,8 @@ import { ArticleCategories as ArticleCategoriesModel } from "@/models/ArticleCat
 import { FormCategory } from "./Form";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 
 
 
@@ -71,51 +64,36 @@ const initialFilter: Filter = {
 };
 
 
-const columns: GridColDef<ArticleCategoriesModel>[] = [
-  {
-    field: 'name',
-    headerName: 'Name',
-    flex: 1,
-    disableColumnMenu: true,
-  },
-  {
-    field: 'slug',
-    headerName: 'Slug Name',
-    flex: 1,
-    disableColumnMenu: true,
-  },
-  {
-    field: 'created_at',
-    headerName: 'Created At',
-    width: 200,
-    disableColumnMenu: true,
-  },
-  {
-    field: 'created_by',
-    headerName: 'Created By',
-    width: 150,
-    disableColumnMenu: true,
-  },
-  {
-    field: "id",
-    headerName: "Action",
-    width: 100,
-    align: "right",
-    headerAlign: "center",
-    renderCell(params) {
-      return (
-        <Box>
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
 
-        </Box>
-      )
-    },
-  }
-];
+  const days = [
+    "Minggu", "Senin", "Selasa", "Rabu",
+    "Kamis", "Jumat", "Sabtu"
+  ];
+
+  const dayName = days[date.getUTCDay()];
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const year = date.getUTCFullYear();
+
+  return `${dayName}, ${hours}/${month}/${year}`;
+}
+
 
 export default function ArticleCategories() {
   const [data, setData] = useState<{ count: number, data: ArticleCategoriesModel[] | null }>();
   const [filter, setFilter] = useState<Filter>(initialFilter);
   const [form, setForm] = useState<{ loading: boolean, open: boolean }>({ loading: false, open: false });
+
+
+  const onRemove = useCallback((id: ArticleCategoriesModel["id"]) => {
+    alert("Delete " + id);
+  }, [data]);
+
+  const onEdit = useCallback((id: ArticleCategoriesModel["id"]) => {
+    alert("Edit " + id);
+  }, [data]);
 
   /**
    * Tambah kategori baru (dummy)
@@ -130,6 +108,126 @@ export default function ArticleCategories() {
       setData(res.data);
     };
   }, [filter]);
+
+  const columns: GridColDef<ArticleCategoriesModel>[] = [
+    {
+      field: 'logo',
+      headerName: 'Logo',
+      width: 80,
+      disableColumnMenu: true,
+      align: "left",
+      headerAlign: "left",
+      sortable: false,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            height: "100%"
+          }}
+        >
+          <Avatar alt={params.row.name} src={params.row.logo || undefined} />
+        </Box>
+      ),
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      disableColumnMenu: true,
+    },
+    {
+      field: 'slug',
+      headerName: 'Slug Name',
+      flex: 1,
+      disableColumnMenu: true,
+    },
+    {
+      field: 'parent',
+      headerName: 'parent',
+      flex: 1,
+      disableColumnMenu: true,
+      renderCell(params) {
+        return (
+          <Box>
+            {
+              params.row.parent ?
+                <Box></Box> :
+                "-"
+            }
+          </Box>
+        )
+      },
+    },
+    {
+      field: 'children',
+      headerName: 'children',
+      flex: 1,
+      disableColumnMenu: true,
+      renderCell(params) {
+        return (
+          <Box>
+            {
+              params.row.children && params.row.children.length > 0 ?
+                <Fragment>
+                  {
+                    params.row.children.length > 3 ?
+                      <Fragment>
+                        {params.row.children.length}
+                      </Fragment> :
+                      <Fragment>
+                        {params.row.children.length}
+                      </Fragment>
+                  }
+                </Fragment> :
+                "-"
+            }
+          </Box>
+        )
+      },
+    },
+    {
+      field: 'created_at',
+      headerName: 'Created At',
+      width: 200,
+      disableColumnMenu: true,
+      valueGetter: (_, v) => (formatDate(String(v.created_at)))
+    },
+    {
+      field: 'created_by',
+      headerName: 'Created By',
+      width: 150,
+      disableColumnMenu: true,
+    },
+    {
+      field: "id",
+      headerName: "Action",
+      width: 100,
+      align: "right",
+      headerAlign: "center",
+      renderCell(params) {
+        return (
+          <Box>
+            <IconButton
+              size="medium"
+              color="primary"
+              onClick={() => onEdit(params.row.id)}
+            >
+              <ModeEditOutlineOutlinedIcon />
+            </IconButton>
+            <IconButton
+              size="medium"
+              color="error"
+              onClick={() => onRemove(params.row.id)}
+            >
+              <DeleteOutlineIcon />
+            </IconButton>
+          </Box>
+        )
+      },
+    }
+  ];
 
 
   // Hooks
