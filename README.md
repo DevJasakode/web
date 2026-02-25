@@ -14,6 +14,47 @@ pnpm dev
 bun dev
 ```
 
+
+## Development
+
+how to run in develepment mode
+```bash
+npm install --legacy-peer-deps
+npm run migrate
+npm run seeds
+npm run dev
+```
+
+How to build
+```bash
+npm install --legacy-peer-deps
+npm run build
+```
+
+How to start in production mode
+```bash
+npm install --legacy-peer-deps
+npm run build
+npm run migrate
+npm run seeds
+npm run start
+```
+
+## Project structure
+
+- config
+- migrations
+- public
+- script
+- seeders
+- src
+  - src/models (@/models)
+  - src/features (@/features)
+  - src/i18n (@/i18n)
+  - src/lib (@/lib)
+  - src/context (@/context)
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
@@ -133,57 +174,12 @@ module.exports = {
 npx sequelize-cli db:seed:all
 ```
 
-
-warsiniinsiyah@gmail.com
-wawangmetu
-
 PT. Jasa Inovasi Internasional
 PT. Jasa Inovasi Holdings
 PT. Agartha Inovasi Holdings
 
 
-| Kode     | Bahasa                   |
-| -------- | ------------------------ |
-| eng      | English                  |
-| spa      | Spanish                  |
-| fra      | French                   |
-| cat      | Catalan                  |
-| por      | Portuguese               |
-| ita      | Italian                  |
-| glg      | Galician                 |
-| eus      | Basque                   |
-| oci      | Occitan                  |
-| arg      | Aragonese                |
-| ast      | Asturian                 |
-| afr      | Afrikaans                |
-| nld      | Dutch                    |
-| swe      | Swedish                  |
-| dan      | Danish                   |
-| nob      | Norwegian Bokmål         |
-| nno      | Norwegian Nynorsk        |
-| isl      | Icelandic                |
-| mkd      | Macedonian               |
-| bul      | Bulgarian                |
-| hbs      | Serbo-Croatian (generic) |
-| hbs_HR   | Croatian                 |
-| hbs_SR   | Serbian                  |
-| hbs_BS   | Bosnian                  |
-| slv      | Slovenian                |
-| rus      | Russian                  |
-| ukr      | Ukrainian                |
-| bel      | Belarusian               |
-| pol      | Polish                   |
-| szl      | Silesian                 |
-| hin      | Hindi                    |
-| urd      | Urdu                     |
-| ind      | Indonesian               |
-| zlm      | Malay                    |
-| epo      | Esperanto                |
-| srd      | Sardinian                |
-| bre      | Breton                   |
-| frp      | Franco-Provençal         |
-| oci_aran | Aranese Occitan          |
-
+## Internationalization (i18n)
 
 
 | Kode    | Bahasa                 |
