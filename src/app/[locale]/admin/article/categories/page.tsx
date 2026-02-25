@@ -31,27 +31,6 @@ type Category = {
   articleCount: number;
 };
 
-/**
- * Dummy data kategori
- */
-const dummyCategories: Category[] = [
-  {
-    id: "1",
-    name: "Technology",
-    articleCount: 12,
-  },
-  {
-    id: "2",
-    name: "Design",
-    articleCount: 8,
-  },
-  {
-    id: "3",
-    name: "Writing",
-    articleCount: 5,
-  },
-];
-
 
 interface Filter {
   page: number;
@@ -66,6 +45,22 @@ const initialFilter: Filter = {
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
+
+  const days = [
+    "Minggu", "Senin", "Selasa", "Rabu",
+    "Kamis", "Jumat", "Sabtu"
+  ];
+
+  const dayName = days[date.getUTCDay()];
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const year = date.getUTCFullYear();
+
+  return `${dayName}, ${hours}/${month}/${year}`;
+}
+
+function formatDateUnix(dateNumber: number): string {
+  const date = new Date(dateNumber);
 
   const days = [
     "Minggu", "Senin", "Selasa", "Rabu",
@@ -102,12 +97,25 @@ export default function ArticleCategories() {
     setForm(pre => ({ ...pre, open: true }))
   };
 
-  const loadCategorys = useCallback(async () => {
-    const res = await axios.get<{ count: number, data: ArticleCategoriesModel[] | null }>("/api/article/categories", { withCredentials: true });
-    if (res.status >= 200 && res.status <= 201) {
-      setData(res.data);
-    };
-  }, [filter]);
+  const loadCategorys = useCallback(async (): Promise<void> => {
+    try {
+      const res = await axios.get<{
+        count: number;
+        data: ArticleCategoriesModel[] | null;
+      }>("/api/article/categories", {
+        withCredentials: true,
+      });
+      if (res.status >= 200 && res.status <= 201) {
+        setData(res.data);
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.response?.data || error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  }, [filter, setData]);
 
   const columns: GridColDef<ArticleCategoriesModel>[] = [
     {
@@ -192,7 +200,7 @@ export default function ArticleCategories() {
       headerName: 'Created At',
       width: 200,
       disableColumnMenu: true,
-      valueGetter: (_, v) => (formatDate(String(v.created_at)))
+      valueGetter: (_, v) => (formatDateUnix(v.created_at))
     },
     {
       field: 'created_by',
@@ -234,6 +242,8 @@ export default function ArticleCategories() {
   useEffect(() => {
     loadCategorys();
   }, [filter]);
+
+  useEffect(() => console.log(data), [data])
 
   return (
     <Box sx={{ p: 3 }}>
@@ -279,7 +289,7 @@ export default function ArticleCategories() {
       </Grid>
       <Box>
         <DataGrid
-          rows={data?.data || []}
+          rows={data?.data ? data.data : []}
           columns={columns}
           initialState={{
             pagination: {

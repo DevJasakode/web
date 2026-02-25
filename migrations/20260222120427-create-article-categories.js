@@ -40,8 +40,8 @@ module.exports = {
 
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.INTEGER,
+        defaultValue: Sequelize.literal("(strftime('%s','now'))"),
       },
 
       created_by: {
@@ -51,7 +51,7 @@ module.exports = {
 
       updated_at: {
         allowNull: true,
-        type: Sequelize.DATE,
+        type: Sequelize.INTEGER,
       },
 
       updated_by: {
@@ -61,7 +61,7 @@ module.exports = {
 
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
+        type: Sequelize.INTEGER,
       },
 
       deleted_by: {

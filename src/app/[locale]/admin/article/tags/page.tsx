@@ -16,6 +16,10 @@ import {
 
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { ArticleTag } from "@/models/ArticleTag";
+
+
 
 /**
  * Tipe data Tag
@@ -36,7 +40,16 @@ const dummyTags: Tag[] = [
   { id: "4", name: "writing", articleCount: 3 },
 ];
 
+interface Response {
+  count: number;
+  data?: ArticleTag | null;
+};
+const initialResponse: Response = {
+  count: 0,
+}
+
 export default function ArticleTags() {
+  const [row, setRow] = React.useState<Response>(initialResponse);
   const [tags, setTags] = React.useState<Tag[]>(dummyTags);
   const [newTag, setNewTag] = React.useState("");
 
@@ -68,6 +81,16 @@ export default function ArticleTags() {
   const handleDeleteTag = (id: string) => {
     setTags((prev) => prev.filter((tag) => tag.id !== id));
   };
+
+  const columns: GridColDef<ArticleTag>[] = [
+    {
+      field: "name",
+      headerName: "Name",
+      sortable: true,
+      disableColumnMenu: true,
+      flex: 1,
+    }
+  ];
 
   return (
     <Box sx={{ p: 3, maxWidth: 800 }}>

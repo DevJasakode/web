@@ -19,13 +19,13 @@ export class ArticleCategories extends Model<
     declare parent_id: ForeignKey<ArticleCategories["id"]> | null;
     declare name: string;
 
-    declare created_at: CreationOptional<Date>;
+    declare created_at: CreationOptional<number>;
     declare created_by: number;
 
-    declare updated_at: Date | null;
+    declare updated_at: number | null;
     declare updated_by: number | null;
 
-    declare deleted_at: Date | null;
+    declare deleted_at: number | null;
     declare deleted_by: number | null;
 
     // relasi
@@ -65,9 +65,9 @@ export default function ArticleCategoriesFactory(sequelize: Sequelize) {
             },
 
             created_at: {
-                type: DataTypes.DATE,
+                type: DataTypes.INTEGER,
                 allowNull: false,
-                defaultValue: DataTypes.NOW,
+                defaultValue: Sequelize.literal("(strftime('%s','now'))"),
             },
 
             created_by: {
@@ -76,7 +76,7 @@ export default function ArticleCategoriesFactory(sequelize: Sequelize) {
             },
 
             updated_at: {
-                type: DataTypes.DATE,
+                type: DataTypes.INTEGER,
                 allowNull: true,
             },
 
@@ -86,7 +86,7 @@ export default function ArticleCategoriesFactory(sequelize: Sequelize) {
             },
 
             deleted_at: {
-                type: DataTypes.DATE,
+                type: DataTypes.INTEGER,
                 allowNull: true,
             },
 
