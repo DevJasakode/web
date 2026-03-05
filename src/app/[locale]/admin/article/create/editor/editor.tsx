@@ -36,6 +36,57 @@ const initialStore: Store = {
     value: "",
 };
 
+
+type BlinkingCursorProps = {
+    width?: number;
+    height?: number;
+    color?: string;
+    blinkDuration?: number; // dalam milidetik
+};
+
+const BlinkingCursor: React.FC<BlinkingCursorProps> = ({
+    width = 2,
+    height = 18,
+    color = "black",
+    blinkDuration = 1000,
+}) => {
+    const animationId = `blink-${Math.random().toString(36).slice(2)}`;
+
+    return (
+        <svg
+            style={{
+                display: "inline-block",
+                verticalAlign: "middle", // atau "top"
+            }}
+            width={width}
+            height={height}
+            viewBox={`0 0 ${width} ${height}`}
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <style>
+                    {`
+            @keyframes ${animationId} {
+              0%, 49% { opacity: 1; }
+              50%, 100% { opacity: 0; }
+            }
+          `}
+                </style>
+            </defs>
+            <rect
+                x="0"
+                y="0"
+                width={width}
+                height={height}
+                fill={color}
+                style={{
+                    animation: `${animationId} ${blinkDuration}ms step-end infinite`,
+                }}
+            />
+        </svg>
+    );
+};
+
 const Editor = forwardRef<HTMLElement, EditorProps>((props, ref) => {
     const [store, setStore] = useState<Store>(initialStore);
 
@@ -74,11 +125,26 @@ const Editor = forwardRef<HTMLElement, EditorProps>((props, ref) => {
         }
     }, []);
 
+    const onRightClick = useCallback((ev: MouseEvent) => {
+        ev.preventDefault(); // mencegah menu default browser
+        // console.log("Klik kanan terdeteksi di:", ev.clientX, ev.clientY);
+        const selection = window.getSelection();
+        console.log(selection)
+
+    }, []);
+
+
+
+
+
     // Hooks
     useEffect(() => {
         window.addEventListener("keyup", onKeyup);
+        document.addEventListener("contextmenu", onRightClick);
+
         return () => {
             window.removeEventListener("keyup", onKeyup);
+            document.removeEventListener("contextmenu", onRightClick);
         };
     }, []);
 
@@ -92,11 +158,13 @@ const Editor = forwardRef<HTMLElement, EditorProps>((props, ref) => {
                 borderColor: store.focus
                     ? "rgba(100,100,100,0.8)"
                     : "rgba(100,100,100,0.3)",
+
+                whiteSpace: "pre"
             }}
             onFocus={() => changeStore("focus", true)}
             onBlur={() => changeStore("focus", false)}
         >
-            {store.value}
+            {store.value}<BlinkingCursor />
         </article>
     );
 });

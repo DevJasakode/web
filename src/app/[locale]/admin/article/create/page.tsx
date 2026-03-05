@@ -1,192 +1,91 @@
 "use client";
 
-import * as React from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Stack,
-  TextField,
-  Button,
-  Divider,
-  MenuItem,
-  Chip,
-} from "@mui/material";
+import { Box, Grid } from "@mui/material";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useQuill } from "react-quilljs";
+import { LoadingButton } from "@mui/lab";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import hljs from "highlight.js";
 
-import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
-import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
+import "quill/dist/quill.snow.css";
+import "highlight.js/styles/github.css";
 
-import { Editor } from "./editor";
-
-// .jktf = Jasakode Text Format
-/**
- * Tipe data form artikel
- * Nantinya bisa langsung disesuaikan dengan API
- */
-type ArticleForm = {
-  title: string;
-  content: string;
-  category: string;
-  tags: string[];
-  status: "draft" | "scheduled" | "published";
-};
-
-/**
- * Dummy kategori
- */
-const categories = ["Technology", "Design", "Writing", "Business"];
-
-/**
- * Halaman Create Article
- */
 export default function ArticleCreate() {
-  const [form, setForm] = React.useState<ArticleForm>({
-    title: "",
-    content: "",
-    category: "",
-    tags: [],
-    status: "draft",
-  });
 
-  const [tagInput, setTagInput] = React.useState("");
+  const [mounted, setMounted] = useState(false);
 
-  /**
-   * Update field form
-   */
-  const handleChange = <K extends keyof ArticleForm>(
-    key: K,
-    value: ArticleForm[K]
-  ) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+  useEffect(() => {
+    (window as any).hljs = hljs;
+    setMounted(true);
+  }, []);
 
-  /**
-   * Tambah tag secara manual
-   */
-  const handleAddTag = () => {
-    if (!tagInput.trim()) return;
+  const modules = useMemo(() => ({
+    toolbar: [
+      ["bold", "italic", "underline", "strike"],
+      // ["blockquote", "code-block"],
+      ["blockquote", "code", "code-block"],
+      [{ header: 1 }, { header: 2 }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ font: [] }],
+      [{ size: ["small", false, "large", "huge"] }],
+      [{ color: [] }, { background: [] }],
+      [{ script: "sub" }, { script: "super" }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+      [{ direction: "rtl" }],
+      [{ align: [] }],
+      ["link", "image", "video"],
+      ["clean"]
+    ],
+    syntax: {
+      highlight: (text: string) => hljs.highlightAuto(text).value
+    },
+    history: {
+      delay: 1000,
+      maxStack: 100,
+      userOnly: true
+    }
+  }), []);
 
-    setForm((prev) => ({
-      ...prev,
-      tags: [...prev.tags, tagInput.trim()],
-    }));
-    setTagInput("");
-  };
+  const { quill, quillRef } = useQuill(
+    mounted
+      ? {
+        theme: "snow",
+        modules
+      }
+      : undefined
+  );
 
-  /**
-   * Dummy submit handler
-   */
-  const handleSubmit = (status: ArticleForm["status"]) => {
-    const payload = { ...form, status };
-    console.log("SUBMIT ARTICLE:", payload);
-  };
+  const publish = useCallback(() => {
+    if (quill) {
+      console.log(quill.getContents());
+    }
+  }, [quill]);
+
+  if (!mounted) return null;
+
+
 
   return (
-    <Editor />
-  )
+    <Box>
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid size={{ xs: 12, md: 6 }} />
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <LoadingButton
+              variant="contained"
+              startIcon={<PublishedWithChangesIcon />}
+              onClick={publish}
+            >
+              Publish
+            </LoadingButton>
+          </Box>
+        </Grid>
+      </Grid>
 
-  return (
-    <Box sx={{ p: 3, maxWidth: 900 }}>
-      {/* ===== Page Header ===== */}
-      <Stack spacing={1} mb={3}>
-        <Typography variant="h5" fontWeight={600}>
-          Create Article
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Write, refine, and prepare your article for publication
-        </Typography>
-      </Stack>
-
-      <Card>
-        <CardContent>
-          <Stack spacing={3}>
-            {/* ===== Title ===== */}
-            <TextField
-              label="Title"
-              placeholder="Enter article title..."
-              fullWidth
-              value={form.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-            />
-
-            {/* ===== Content ===== */}
-            <TextField
-              label="Content"
-              placeholder="Start writing your article..."
-              multiline
-              minRows={10}
-              fullWidth
-              value={form.content}
-              onChange={(e) => handleChange("content", e.target.value)}
-            />
-
-            {/* ===== Metadata ===== */}
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <TextField
-                select
-                label="Category"
-                fullWidth
-                value={form.category}
-                onChange={(e) => handleChange("category", e.target.value)}
-              >
-                {categories.map((cat) => (
-                  <MenuItem key={cat} value={cat}>
-                    {cat}
-                  </MenuItem>
-                ))}
-              </TextField>
-
-              <TextField
-                label="Add Tag"
-                fullWidth
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAddTag()}
-              />
-            </Stack>
-
-            {/* ===== Tags Preview ===== */}
-            {form.tags.length > 0 && (
-              <Stack direction="row" spacing={1} flexWrap="wrap">
-                {form.tags.map((tag) => (
-                  <Chip key={tag} label={tag} />
-                ))}
-              </Stack>
-            )}
-
-            <Divider />
-
-            {/* ===== Actions ===== */}
-            <Stack direction="row" spacing={2} justifyContent="flex-end">
-              <Button
-                variant="outlined"
-                startIcon={<SaveOutlinedIcon />}
-                onClick={() => handleSubmit("draft")}
-              >
-                Save Draft
-              </Button>
-
-              <Button
-                variant="outlined"
-                startIcon={<ScheduleOutlinedIcon />}
-                onClick={() => handleSubmit("scheduled")}
-              >
-                Schedule
-              </Button>
-
-              <Button
-                variant="contained"
-                startIcon={<PublishOutlinedIcon />}
-                onClick={() => handleSubmit("published")}
-              >
-                Publish
-              </Button>
-            </Stack>
-          </Stack>
-        </CardContent>
-      </Card>
+      <div style={{ width: "100%", minHeight: 300 }}>
+        <div ref={quillRef} />
+      </div>
     </Box>
   );
-};
+}

@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
             name: body.name,
             slug: body.slug,
             logo: body.logo,
-            created_at: new Date(),
+            created_at: Date.now(),
             created_by: 1,
         });
 

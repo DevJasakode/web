@@ -6,7 +6,8 @@ import {
   Chip,
   Box,
 } from '@mui/material'
-import type { Article } from './types'
+import type { Article } from './types';
+import { SmartLink } from '@/components/link';
 
 interface ArticleCardProps {
   article: Article
@@ -51,21 +52,23 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           <strong>{author}</strong> • {date}
         </Typography>
 
-        <Typography
-          variant="h6"
-          fontWeight={700}
-          sx={{
-            mt: 1,
-            cursor: 'pointer',
-            transition: 'color 0.2s ease, transform 0.2s ease',
-            '&:hover': {
-              color: 'primary.main',
-              transform: 'translateX(2px)',
-            },
-          }}
-        >
-          {title}
-        </Typography>
+        <SmartLink href={{ pathname: "/[locale]/article/slug" }}>
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            sx={{
+              mt: 1,
+              cursor: 'pointer',
+              transition: 'color 0.2s ease, transform 0.2s ease',
+              '&:hover': {
+                color: 'primary.main',
+                transform: 'translateX(2px)',
+              },
+            }}
+          >
+            {title}
+          </Typography>
+        </SmartLink>
 
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
           {excerpt}
