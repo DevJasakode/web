@@ -14,7 +14,7 @@ import {
   Paper,
   Grid,
 } from "@mui/material";
-
+import Swal from "sweetalert2";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -23,6 +23,9 @@ import axios, { AxiosError } from "axios";
 import { FormTags, FormTagsRef } from "./Form";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import RotateLeftOutlinedIcon from '@mui/icons-material/RotateLeftOutlined';
 
 
 
@@ -134,8 +137,34 @@ export default function ArticleTags() {
   /**
    * Hapus tag (dummy)
    */
-  const handleDeleteTag = (id: string) => {
-    setTags((prev) => prev.filter((tag) => tag.id !== id));
+  const handleDeleteTag = async (id: ArticleTag["id"]) => {
+    try {
+      const res = await axios.delete(`/api/article/tags/${id}`);
+      Swal.fire({
+        title: "Success",
+        text: res.statusText,
+        icon: "success",
+        confirmButtonText: "Close",
+        backdrop: true,
+        customClass: {
+          container: 'swal-high-z',
+        },
+      }).then(() => {
+        loadTags();
+      });
+    } catch (error) {
+      const err: AxiosError = error as AxiosError;
+      Swal.fire({
+        title: "Failed",
+        text: err.response?.statusText || err.message,
+        icon: "error",
+        confirmButtonText: "Ok",
+        backdrop: true,
+        customClass: {
+          container: 'swal-high-z',
+        },
+      });
+    }
   };
 
   const columns: GridColDef<ArticleTag>[] = [
@@ -162,18 +191,18 @@ export default function ArticleTags() {
     },
     {
       field: "created_at",
-      headerName: "created_at",
-      sortable: true,
-      disableColumnMenu: true,
-      width: 150,
-    },
-    {
-      field: "created_by",
-      headerName: "created_by",
+      headerName: "Created At",
       sortable: true,
       disableColumnMenu: true,
       width: 150,
       valueGetter: (_, v) => (formatDateUnix(v.created_by)),
+    },
+    {
+      field: "created_by",
+      headerName: "Created By",
+      sortable: true,
+      disableColumnMenu: true,
+      width: 150,
     },
     {
       field: "id",
@@ -198,6 +227,7 @@ export default function ArticleTags() {
             <IconButton
               size="small"
               color="error"
+              onClick={() => handleDeleteTag(params.row.id)}
             >
               <DeleteOutlinedIcon />
             </IconButton>
@@ -229,6 +259,9 @@ export default function ArticleTags() {
       {/* Form Tags */}
       <FormTags
         ref={formRef}
+        onSuccess={() => { 
+          loadTags();
+        }}
       />
 
       {/* ===== Page Header ===== */}
@@ -252,20 +285,41 @@ export default function ArticleTags() {
                 xs: "flex-start",
                 md: "flex-end",
               },
+              gap: 1,
             }}
           >
+            <Button
+              variant="outlined"
+              color="success"
+              startIcon={<FileDownloadOutlinedIcon />}
+            >
+              Import
+            </Button>
+            <Button
+              variant="outlined"
+              color="success"
+              startIcon={<FileUploadOutlinedIcon />}
+            >
+              Export
+            </Button>
+            <Button
+              variant="outlined"
+              color="info"
+              onClick={loadTags}
+              startIcon={<RotateLeftOutlinedIcon />}
+            >
+              Refresh
+            </Button>
             <Button
               variant="contained"
               startIcon={<AddOutlinedIcon />}
               onClick={handleAddTag}
             >
-              Add
+              Create
             </Button>
           </Box>
         </Grid>
       </Grid>
-
-
       <Box>
         <DataGrid
           rows={row.data || []}

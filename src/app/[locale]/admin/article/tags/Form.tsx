@@ -17,7 +17,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { ArticleTag } from "@/models/ArticleTag";
 import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import axios, { AxiosError } from "axios";
-
+import Swal from "sweetalert2";
 
 
 
@@ -47,6 +47,7 @@ const initialForm: FormArticleTag = {
 interface FormTagsProps {
     onCancel?(): void;
     onClose?(): void;
+    onSuccess?(): void;
 };
 
 interface FormTagsRef {
@@ -69,17 +70,37 @@ const FormTags = forwardRef<FormTagsRef, FormTagsProps>((props, ref) => {
         if (ref && props.onClose) props.onClose();
     }, [props, ref, setStore, setForm]);
 
-    const save = useCallback(async() => {
+    const save = useCallback(async () => {
         try {
             const res = await axios.post("/api/article/tags", form, { withCredentials: true });
-            if(res.status >= 200 && res.status <= 201) {
-                console.log(res.status, res.statusText);
-                console.log(res.data);
-            };
+            Swal.fire({
+                title: "Success",
+                text: res.statusText,
+                icon: "success",
+                confirmButtonText: "Close",
+                backdrop: true,
+                customClass: {
+                    container: 'swal-high-z',
+                },
+            }).then(() => {
+                if(props.onSuccess) {
+                    setStore(pre => ({ ...pre, open: false }));
+                    setForm(initialForm);
+                    props.onSuccess();
+                };
+            });
         } catch (error) {
-
-        } finally {
-
+            const err: AxiosError = error as AxiosError;
+            Swal.fire({
+                title: "Failed",
+                text: err.response?.statusText || err.message,
+                icon: "error",
+                confirmButtonText: "Ok",
+                backdrop: true,
+                customClass: {
+                    container: 'swal-high-z',
+                },
+            });
         }
     }, [form, props, ref, setStore, setForm]);
 

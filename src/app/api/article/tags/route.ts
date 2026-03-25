@@ -3,7 +3,7 @@ import { ArticleTag } from "@/models/ArticleTag";
 import { Op } from "sequelize";
 import models from "@/models";
 
-interface Form {
+export interface Form {
     name: ArticleTag["name"];
     slug: ArticleTag["slug"];
     desc: ArticleTag["desc"];
@@ -103,3 +103,4 @@ export async function POST(request: NextRequest) {
         );
     }
 };
+

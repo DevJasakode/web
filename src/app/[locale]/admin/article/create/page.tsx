@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Grid } from "@mui/material";
+import { Box, Card, Grid, FormControl, TextField, Stack, Typography, Tooltip, Select, MenuItem } from "@mui/material";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useQuill } from "react-quilljs";
 import { LoadingButton } from "@mui/lab";
@@ -83,9 +83,129 @@ export default function ArticleCreate() {
         </Grid>
       </Grid>
 
-      <div style={{ width: "100%", minHeight: 300 }}>
-        <div ref={quillRef} />
-      </div>
+      <Grid container spacing={3} sx={{ display: "flex" }}>
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Card sx={{ flex: 1, border: "none", boxShadow: "none" }}>
+            <Stack spacing={2} sx={{ mb: 3 }}>
+              <FormControl>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 0.5,
+                  }}
+                >
+                  <span>Page Title</span>
+                  <Tooltip
+                    title="Title ini akan ditampilkan di sebelah favicon pada tab browser. Ini adalah title untuk halaman artikel (page title), bukan judul artikel di dalam konten."
+                  >
+                    <Typography
+                      sx={{
+                        ml: 0.5,
+                        cursor: "default",
+                        ":hover": { color: "green" }
+                      }}
+                    >
+                      *
+                    </Typography>
+                  </Tooltip>
+                </Box>
+                <TextField
+                  size="small"
+                  placeholder="Title"
+                />
+              </FormControl>
+            </Stack>
+            <div ref={quillRef} style={{ minHeight: 300 }} spellCheck={"false"} />
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, md: 4 }} sx={{ display: "flex" }}>
+          <Card sx={{ flex: 1, px: 3, py: 2 }}>
+            <Stack spacing={2}>
+              <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Slug / Url</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+              <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Featured Image / Thumbnail</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+              <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Excerpt / Summary</Typography>
+                <TextField
+                  size="small"
+                  multiline
+                  minRows={3}
+                  maxRows={10}
+                />
+              </FormControl>
+              <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Status / Publishing Control</Typography>
+                <Select
+                  size="small" 
+                  value={"draft"}
+                >
+                  <MenuItem value={"draft"}>Draft</MenuItem>
+                  <MenuItem value={"Published"}>Published</MenuItem>
+                  <MenuItem value={"Scheduled"}>Scheduled</MenuItem>
+                  <MenuItem value={"Archived"}>Archived</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Category</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+              <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Tags</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+              <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Author</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+                <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Meta SEO</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+                 <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Reading Time</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+                <FormControl>
+                <Typography sx={{ mb: 0.5 }}>Visibility / Access</Typography>
+                <TextField
+                  size="small"
+                />
+              </FormControl>
+            </Stack>
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
   );
 }
+
+// Title
+// Slug
+// Featured Image
+// Excerpt / Summary
+// Content (Rich Text Editor)
+// Category
+// Tags
+// Author
+// Status (Draft / Published)
+// Publish Date
