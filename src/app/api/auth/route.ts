@@ -573,26 +573,4 @@ export async function POST(request: Request) {
       { status: 500, statusText: "tidak dapat di lakukan" }
     );
   }
-
-
-
-  // const message = "Hello Kampang";
-  // const seedpharase = ECCWallet.generateMnemonic();
-  // const privKey = ECCWallet.mnemonicToPrivateKey(seedpharase);
-  // const publicKey = ECCWallet.getPublicKey(privKey);
-  // const signature = await ECCWallet.sign(message, privKey);
-  // const verify = await ECCWallet.verify(message, signature, publicKey);
-  // return NextResponse.json({
-  //   message,
-  //   verify,
-  //   signature: signature,
-  //   textHex: ECCWallet.uint8ArrayToHex(ECCWallet.stringToUint8Array(message)),
-  //   // session: crypto.randomUUID(),
-  //   // seed_phrase: seedpharase,
-  //   // private_key: privKey,
-  //   // public_key: publicKey,
-  // }, {
-  //   status: 201,
-  //   statusText: "Success create client session"
-  // });
 };

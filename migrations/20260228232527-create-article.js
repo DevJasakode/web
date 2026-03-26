@@ -31,8 +31,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-
-
       created_at: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -106,18 +104,18 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('article_comments', {
+    // await queryInterface.createTable('article_comments', {
 
-    });
-    await queryInterface.createTable('article_like', {
+    // });
+    // await queryInterface.createTable('article_like', {
 
-    });
-    await queryInterface.createTable('article_dislike', {
+    // });
+    // await queryInterface.createTable('article_dislike', {
 
-    });
-    await queryInterface.createTable('article_share', {
+    // });
+    // await queryInterface.createTable('article_share', {
 
-    });
+    // });
 
 
     // Associates
@@ -205,9 +203,9 @@ module.exports = {
     await queryInterface.dropTable('articles');
 
     await queryInterface.dropTable('article_media');
-    await queryInterface.dropTable('article_comments');
-    await queryInterface.dropTable('article_like');
-    await queryInterface.dropTable('article_dislike');
-    await queryInterface.dropTable('article_share');
+    // await queryInterface.dropTable('article_comments');
+    // await queryInterface.dropTable('article_like');
+    // await queryInterface.dropTable('article_dislike');
+    // await queryInterface.dropTable('article_share');
   }
 };

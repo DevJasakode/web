@@ -1,0 +1,32 @@
+
+
+###
+GET http://127.0.0.1:3000/api/auth
+
+###
+POST http://127.0.0.1:3000/api/auth
+Content-Type: application/json
+Authorization: Bearer your_token_here
+
+{
+  "email": "user@example.com",
+  "password": "123456"
+}
+
+###
+PATCH  http://127.0.0.1:3000/api/auth/login
+Content-Type: application/json
+Authorization: Bearer your_token_here
+Cookie: sessionId=abc123; refreshToken=xyz456
+
+{
+    "email": "admin@mail.com",
+    "username": "admin",
+    "password": "Admin123@",
+    "remember": true
+}
+
+###
+GET http://127.0.0.1:3000/api/user
+
+

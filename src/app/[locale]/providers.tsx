@@ -9,6 +9,8 @@ import ApplicationProvider from "@/context/Application";
 import { ClientBoundary } from "@/context/ClientBoundary";
 import { MainLayout, AdminLayout } from "@/features/layouts";
 
+import LayoutAmdim from "@/layouts/admin";
+
 /**
  * ----------------------------------------
  * Helper: strip locale from pathname
@@ -52,7 +54,7 @@ export function Providers({
                 <ClientBoundary>
                     <ApplicationProvider>
                         {cleanPath.startsWith("/admin") ? (
-                            <AdminLayout>{children}</AdminLayout>
+                            <LayoutAmdim>{children}</LayoutAmdim>
                         ) : (
                             <MainLayout>{children}</MainLayout>
                         )}

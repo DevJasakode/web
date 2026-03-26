@@ -57,7 +57,6 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
-
     await queryInterface.addConstraint("logs", {
       fields: ["geo_status"],
       type: "check",
@@ -72,22 +71,9 @@ module.exports = {
         ],
       },
     });
-
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('authentications');
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
   }
 };
